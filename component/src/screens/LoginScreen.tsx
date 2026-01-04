@@ -1,0 +1,200 @@
+import React, { useMemo, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  ScrollView
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { KeyboardAvoidingView, Platform } from "react-native";
+
+import CountryPicker, {
+  Country,
+  CountryCode,
+} from "react-native-country-picker-modal";
+
+const { width } = Dimensions.get("window");
+
+const bannerImages: string[] = [
+  "https://images.unsplash.com/photo-1568605114967-8130f3a36994",
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
+  "https://images.unsplash.com/photo-1572120360610-d971b9b78825",
+  "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6",
+];
+
+const LoginScreen: React.FC = () => {
+  const [phone, setPhone] = useState<string>("");
+
+  const [countryCode, setCountryCode] = useState<CountryCode>("IN");
+  const [callingCode, setCallingCode] = useState<string>("91");
+  const randomImage = useMemo<string>(() => {
+    return bannerImages[Math.floor(Math.random() * bannerImages.length)];
+  }, []);
+
+  const isValid = phone.length >= 7;
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "height" : undefined}
+    >
+    <ScrollView
+    style={{ flex: 1 }}
+    contentContainerStyle={styles.container}
+    keyboardShouldPersistTaps="handled"
+    >
+
+      {/* Banner */}
+      <View style={styles.bannerContainer}>
+        <Image source={{ uri: randomImage }} style={styles.banner} />
+      </View>
+
+      {/* Content */}
+      <View style={styles.content}>
+
+        <Text style={styles.title}>Hello Again, Welcome Back!</Text>
+        <Text style={styles.subtitle}>
+          Your personalised property search experience is ready.
+        </Text>
+
+        <Text style={styles.loginText}>Login or Register to get started</Text>
+
+        {/* Phone Input */}
+        <View style={styles.phoneContainer}>
+          <CountryPicker
+            countryCode={countryCode}
+            withFilter
+            withFlag
+            withCallingCode
+            withEmoji
+            onSelect={(country: Country) => {
+              setCountryCode(country.cca2);
+              setCallingCode(country.callingCode[0]);
+            }}
+          />
+
+          <Text style={styles.countryCode}>+{callingCode}</Text>
+
+          <TextInput
+            placeholder="Enter phone number"
+            keyboardType="phone-pad"
+            value={phone}
+            onChangeText={setPhone}
+            style={styles.input}
+          />
+        </View>
+
+        {/* Continue Button */}
+        <TouchableOpacity
+          disabled={!isValid}
+          style={[
+            styles.button,
+            isValid ? styles.buttonActive : styles.buttonDisabled,
+          ]}
+        >
+          <Text style={styles.buttonText}>Continue</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.orText}>OR</Text>
+
+        <TouchableOpacity>
+          <Text style={styles.skipText}>Do it later</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
+    </KeyboardAvoidingView>
+  </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+  flexGrow: 1,
+  paddingBottom: 40,
+  backgroundColor: "#F8FAFF",
+    },
+  bannerContainer: {
+    height: 480,
+  },
+  banner: {
+    width: width,
+    height: "100%",
+    resizeMode: "cover",
+  },
+  content: {
+    backgroundColor: "#FFFFFF",
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    marginTop: -30,
+    padding: 24,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: "#1A1A1A",
+  },
+  subtitle: {
+    fontSize: 14,
+    color: "#6B7280",
+    marginTop: 6,
+  },
+  loginText: {
+    marginTop: 24,
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  phoneContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    borderRadius: 10,
+    marginTop: 12,
+    paddingHorizontal: 12,
+    gap: 6,
+  },
+  countryCode: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  input: {
+    flex: 1,
+    height: 48,
+    fontSize: 16,
+  },
+  button: {
+    height: 48,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
+  },
+  buttonActive: {
+    backgroundColor: "#f63b3bff",
+  },
+  buttonDisabled: {
+    backgroundColor: "#e7c3c3ff",
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  orText: {
+    textAlign: "center",
+    marginVertical: 16,
+    color: "#6B7280",
+  },
+  skipText: {
+    textAlign: "center",
+    color: "#f63b3bff",
+    fontWeight: "600",
+  },
+});
+
+export default LoginScreen;

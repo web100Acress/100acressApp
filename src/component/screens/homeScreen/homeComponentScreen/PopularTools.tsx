@@ -1,0 +1,72 @@
+import React from "react";
+import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+
+const tools = [
+  {
+    label: "EMI Calculator",
+    icon: "https://img.icons8.com/ios-filled/50/000000/mortgage.png",
+  },
+  {
+    label: "Budget Calculator",
+    icon: "https://img.icons8.com/ios-filled/50/000000/calculator.png",
+  },
+  {
+    label: "Property Insights",
+    icon: "https://img.icons8.com/ios-filled/50/000000/idea.png",
+  },
+];
+
+const PopularTools = () => {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Use popular tools</Text>
+      <Text style={styles.subtitle}>Go from browsing to buying</Text>
+
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {tools.map((item, index) => (
+          <View key={index} style={styles.card}>
+            <Image source={{ uri: item.icon }} style={styles.icon} />
+            <Text style={styles.text}>{item.label}</Text>
+          </View>
+        ))}
+      </ScrollView>
+    </View>
+  );
+};
+
+export default PopularTools;
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    marginTop: 24,
+    backgroundColor: "#ffe5e5ff",
+  },
+  title: {
+    fontWeight: "600",
+  },
+  subtitle: {
+    color: "#6B7280",
+    marginTop: 4,
+  },
+  card: {
+    width: 150,
+    height: 100,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    marginRight: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 12,
+  },
+  icon: {
+    width: 32,
+    height: 32,
+    marginBottom: 8,
+    tintColor: "#cf4040ff",
+  },
+  text: {
+    fontSize: 12,
+    fontWeight: "600",
+  },
+});

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native";
 
 const tools = [
   {
@@ -23,11 +23,13 @@ const PopularTools = () => {
       <Text style={styles.subtitle}>Go from browsing to buying</Text>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {tools.map((item, index) => (
-          <View key={index} style={styles.card}>
+        {tools.map((item) => (
+          <TouchableOpacity  key={item.label}>
+            <View style={styles.card}>
             <Image source={{ uri: item.icon }} style={styles.icon} />
             <Text style={styles.text}>{item.label}</Text>
           </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </View>

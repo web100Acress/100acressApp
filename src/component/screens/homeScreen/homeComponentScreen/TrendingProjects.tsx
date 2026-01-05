@@ -89,9 +89,58 @@ const TrendingProjects = () => {
 
             {/* Actions */}
             <View style={styles.actions}>
-              {/* <Pressable style={styles.exploreBtn}>
+              <Pressable style={styles.exploreBtn}>
                 <Text style={styles.exploreText}>Explore</Text>
-              </Pressable> */}
+              </Pressable>
+
+              <Pressable style={styles.iconBtn}>
+                <Text>📞</Text>
+              </Pressable>
+
+              <Pressable style={styles.iconBtn}>
+                <Text>💬</Text>
+              </Pressable>
+            </View>
+          </Pressable>
+        ))}
+      </ScrollView>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.row}
+      >
+        {projects.map((item) => (
+          <Pressable
+            key={item.id}
+            style={styles.card}
+            onPress={() => Linking.openURL(item.url)}
+          >
+            {/* Image */}
+            <View>
+              <Image source={{ uri: item.image }} style={styles.image} />
+
+              {/* RERA Badge */}
+              {/* <View style={styles.reraBadge}>
+                <Text style={styles.reraText}>✓ RERA</Text>
+              </View> */}
+
+              {/* Wishlist */}
+              <Text style={styles.heart}>♡</Text>
+            </View>
+
+            {/* Details */}
+            <View style={styles.details}>
+              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.price}>{item.price}</Text>
+              <Text style={styles.location}>{item.location}</Text>
+            </View>
+
+            {/* Actions */}
+            <View style={styles.actions}>
+              <Pressable style={styles.exploreBtn}>
+                <Text style={styles.exploreText}>Explore</Text>
+              </Pressable>
 
               <Pressable style={styles.iconBtn}>
                 <Text>📞</Text>

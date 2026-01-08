@@ -5,6 +5,7 @@ import StartWith from "./homeComponentScreen/StartWith";
 import PopularTools from "./homeComponentScreen/PopularTools";
 import RecommendedProjects from "./homeComponentScreen/RecommendedProjects";
 import TrendingProjects from "./homeComponentScreen/TrendingProjects";
+import NewLaunchSection from "./homeComponentScreen/NewLaunchSection";
 
 const HomeScreen = () => {
   return (
@@ -15,6 +16,7 @@ const HomeScreen = () => {
         <PopularTools />
         <RecommendedProjects />
         <TrendingProjects />
+        <NewLaunchSection />
       </ScrollView>
     </View>
   );

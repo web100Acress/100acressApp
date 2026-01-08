@@ -89,9 +89,9 @@ const TrendingProjects = () => {
 
             {/* Actions */}
             <View style={styles.actions}>
-              <Pressable style={styles.exploreBtn}>
+              {/* <Pressable style={styles.exploreBtn}>
                 <Text style={styles.exploreText}>Explore</Text>
-              </Pressable>
+              </Pressable> */}
 
               <Pressable style={styles.iconBtn}>
                 <Text>📞</Text>
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   iconBtn: {
-    width: 36,
+    width: 80,
     height: 36,
     borderRadius: 8,
     borderWidth: 1,
@@ -244,5 +244,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginLeft: 6,
+    backgroundColor: "#ffe5e5ff",
   },
 });

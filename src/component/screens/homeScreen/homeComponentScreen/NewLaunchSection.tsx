@@ -6,20 +6,10 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Pressable,
 } from 'react-native';
 
 const PROJECT_DATA = [
-  {
-    tag: '★ New launch ★',
-    image:
-      'https://100acress-media-bucket.s3.ap-south-1.amazonaws.com/thumbnails/1759123018502-thumb.webp',
-    name: 'SB Urban Park',
-    location: 'Manyata Tech Park, Thanisandra',
-    price: '₹1.97 - 3.7 Cr',
-    type: '3, 4 BHK Apartments',
-    growth: '↑ 31.5% (1Y) in Manyata Tech',
-    buttonText: 'View number',
-  },
   {
     tag: '★ New launch ★',
     image:
@@ -74,12 +64,21 @@ const NewLaunchSection = () => {
                 <Text style={styles.type}>{item.type}</Text>
                 <Text style={styles.growth}>{item.growth}</Text>
 
-                <TouchableOpacity style={styles.button}>
-                  <Text style={styles.buttonText}>{item.buttonText}</Text>
-                </TouchableOpacity>
-               
+
               </View>
             </View>
+            {/* BUTTON ROW */}
+                <View style={styles.buttonRow}>
+                  <TouchableOpacity style={styles.button}>
+                    <Text style={styles.buttonText}>
+                      {item.buttonText}
+                    </Text>
+                  </TouchableOpacity>
+
+                  <Pressable style={styles.iconBtn}>
+                    <Text style={styles.iconText}>💬</Text>
+                  </Pressable>
+                </View>
           </View>
         ))}
       </ScrollView>
@@ -87,12 +86,14 @@ const NewLaunchSection = () => {
   );
 };
 
+export default NewLaunchSection;
+
 const styles = StyleSheet.create({
   container: {
     padding: 16,
   },
   header: {
-    flexDirection: 'row',
+    // flexDirection: '',
     alignItems: 'center',
     marginBottom: 4,
   },
@@ -112,9 +113,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FAFAFA',
     borderRadius: 12,
     padding: 12,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
     elevation: 2,
   },
   newLaunchTag: {
@@ -166,17 +164,35 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 
-  button: {
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    paddingVertical: 6,
+  /* 🔥 BUTTON FLEX ROW */
+  buttonRow: {
+    flexDirection: 'row',
     alignItems: 'center',
     marginTop: 8,
+  },
+
+  button: {
+    flex: 1,
+    backgroundColor: '#007AFF',
+    borderRadius: 8,
+    paddingVertical: 10,
+    alignItems: 'center',
   },
   buttonText: {
     color: '#fff',
     fontWeight: '600',
   },
-});
 
-export default NewLaunchSection;
+  iconBtn: {
+    marginLeft: 8,
+    width: 42,
+    height: 42,
+    borderRadius: 8,
+    backgroundColor: '#E8F0FE',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconText: {
+    fontSize: 18,
+  },
+});

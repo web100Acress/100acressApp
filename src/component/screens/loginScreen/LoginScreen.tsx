@@ -41,13 +41,13 @@ const LoginScreen = ({ navigation }: any) => {
 
   // ❌ No storage — temporary skip
   const skipLogin = () => {
-    navigation.replace("HomeScreen");
+    navigation.replace("BottomTabs");
   };
 
   // ✅ Store login permanently
   const handleLogin = async () => {
     await AsyncStorage.setItem("isLoggedIn", "true");
-    navigation.replace("HomeScreen");
+    navigation.replace("BottomTabs");
   };
 
   return (
@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
   },
+  
   buttonActive: { backgroundColor: "#f63b3bff" },
   buttonDisabled: { backgroundColor: "#e7c3c3ff" },
   buttonText: { color: "#fff", fontSize: 16, fontWeight: "600" },

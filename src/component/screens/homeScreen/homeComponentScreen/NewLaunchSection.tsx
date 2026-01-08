@@ -77,6 +77,7 @@ const NewLaunchSection = () => {
                 <TouchableOpacity style={styles.button}>
                   <Text style={styles.buttonText}>{item.buttonText}</Text>
                 </TouchableOpacity>
+               
               </View>
             </View>
           </View>

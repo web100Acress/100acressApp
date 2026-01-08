@@ -7,147 +7,136 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  ScrollView
+
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { KeyboardAvoidingView, Platform } from "react-native";
-
 import CountryPicker, {
   Country,
   CountryCode,
 } from "react-native-country-picker-modal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
 
-const bannerImages: string[] = [
+const bannerImages = [
   "https://images.unsplash.com/photo-1568605114967-8130f3a36994",
   "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
   "https://images.unsplash.com/photo-1572120360610-d971b9b78825",
   "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6",
 ];
 
-const LoginScreen: React.FC = () => {
-  const [phone, setPhone] = useState<string>("");
-
+const LoginScreen = ({ navigation }: any) => {
+  const [phone, setPhone] = useState("");
   const [countryCode, setCountryCode] = useState<CountryCode>("IN");
-  const [callingCode, setCallingCode] = useState<string>("91");
-  const randomImage = useMemo<string>(() => {
-    return bannerImages[Math.floor(Math.random() * bannerImages.length)];
-  }, []);
+  const [callingCode, setCallingCode] = useState("91");
 
-  const isValid = phone.length >= 7;
+  const randomImage = useMemo(
+    () => bannerImages[Math.floor(Math.random() * bannerImages.length)],
+    []
+  );
+
+  const isValid = phone.length >= 10;
+
+  // ❌ No storage — temporary skip
+  const skipLogin = () => {
+    navigation.replace("HomeScreen");
+  };
+
+  // ✅ Store login permanently
+  const handleLogin = async () => {
+    await AsyncStorage.setItem("isLoggedIn", "true");
+    navigation.replace("HomeScreen");
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "height" : undefined}
-    >
-    <ScrollView
-    style={{ flex: 1 }}
-    contentContainerStyle={styles.container}
-    keyboardShouldPersistTaps="handled"
-    >
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "height" : undefined}
+      >
+       
+          <View style={styles.bannerContainer}>
+            <Image source={{ uri: randomImage }} style={styles.banner} />
+          </View>
 
-      {/* Banner */}
-      <View style={styles.bannerContainer}>
-        <Image source={{ uri: randomImage }} style={styles.banner} />
-      </View>
+          <View style={styles.content}>
+            <Text style={styles.title}>Hello Again, Welcome Back!</Text>
+            <Text style={styles.subtitle}>
+              Your personalised property search experience is ready.
+            </Text>
 
-      {/* Content */}
-      <View style={styles.content}>
+            <Text style={styles.loginText}>
+              Login or Register to get started
+            </Text>
 
-        <Text style={styles.title}>Hello Again, Welcome Back!</Text>
-        <Text style={styles.subtitle}>
-          Your personalised property search experience is ready.
-        </Text>
+            <View style={styles.phoneContainer}>
+              <CountryPicker
+                countryCode={countryCode}
+                withFilter
+                withFlag
+                withCallingCode
+                onSelect={(country: Country) => {
+                  setCountryCode(country.cca2);
+                  setCallingCode(country.callingCode[0]);
+                }}
+              />
 
-        <Text style={styles.loginText}>Login or Register to get started</Text>
+              <Text style={styles.countryCode}>+{callingCode}</Text>
 
-        {/* Phone Input */}
-        <View style={styles.phoneContainer}>
-          <CountryPicker
-            countryCode={countryCode}
-            withFilter
-            withFlag
-            withCallingCode
-            withEmoji
-            onSelect={(country: Country) => {
-              setCountryCode(country.cca2);
-              setCallingCode(country.callingCode[0]);
-            }}
-          />
+              <TextInput
+                placeholder="Enter phone number"
+                keyboardType="phone-pad"
+                value={phone}
+                onChangeText={setPhone}
+                style={styles.input}
+              />
+            </View>
 
-          <Text style={styles.countryCode}>+{callingCode}</Text>
+            <TouchableOpacity
+              disabled={!isValid}
+              onPress={handleLogin}
+              style={[
+                styles.button,
+                isValid ? styles.buttonActive : styles.buttonDisabled,
+              ]}
+            >
+              <Text style={styles.buttonText}>Continue</Text>
+            </TouchableOpacity>
 
-          <TextInput
-            placeholder="Enter phone number"
-            keyboardType="phone-pad"
-            value={phone}
-            onChangeText={setPhone}
-            style={styles.input}
-          />
-        </View>
+            <Text style={styles.orText}>OR</Text>
 
-        {/* Continue Button */}
-        <TouchableOpacity
-          disabled={!isValid}
-          style={[
-            styles.button,
-            isValid ? styles.buttonActive : styles.buttonDisabled,
-          ]}
-        >
-          <Text style={styles.buttonText}>Continue</Text>
-        </TouchableOpacity>
+            <TouchableOpacity onPress={skipLogin}>
+              <Text style={styles.skipText}>Do it later</Text>
+            </TouchableOpacity>
+          </View>
 
-        <Text style={styles.orText}>OR</Text>
-
-        <TouchableOpacity>
-          <Text style={styles.skipText}>Do it later</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
-    </KeyboardAvoidingView>
-  </SafeAreaView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
+export default LoginScreen;
+
 const styles = StyleSheet.create({
   container: {
-  flexGrow: 1,
-  paddingBottom: 40,
-  backgroundColor: "#F8FAFF",
-    },
-  bannerContainer: {
-    height: 480,
+    flexGrow: 1,
+    paddingBottom: 40,
+    backgroundColor: "#F8FAFF",
   },
-  banner: {
-    width: width,
-    height: "100%",
-    resizeMode: "cover",
-  },
+  bannerContainer: { height: 480 },
+  banner: { width, height: "100%", resizeMode: "cover" },
   content: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#fff",
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     marginTop: -30,
     padding: 24,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "#1A1A1A",
-  },
-  subtitle: {
-    fontSize: 14,
-    color: "#6B7280",
-    marginTop: 6,
-  },
-  loginText: {
-    marginTop: 24,
-    fontSize: 16,
-    fontWeight: "600",
-  },
+  title: { fontSize: 24, fontWeight: "700" },
+  subtitle: { fontSize: 14, color: "#6B7280", marginTop: 6 },
+  loginText: { marginTop: 24, fontSize: 16, fontWeight: "600" },
   phoneContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -158,15 +147,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     gap: 6,
   },
-  countryCode: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  input: {
-    flex: 1,
-    height: 48,
-    fontSize: 16,
-  },
+  countryCode: { fontSize: 16, fontWeight: "600" },
+  input: { flex: 1, height: 48, fontSize: 16 },
   button: {
     height: 48,
     borderRadius: 10,
@@ -174,27 +156,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
   },
-  buttonActive: {
-    backgroundColor: "#f63b3bff",
-  },
-  buttonDisabled: {
-    backgroundColor: "#e7c3c3ff",
-  },
-  buttonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  orText: {
-    textAlign: "center",
-    marginVertical: 16,
-    color: "#6B7280",
-  },
-  skipText: {
-    textAlign: "center",
-    color: "#f63b3bff",
-    fontWeight: "600",
-  },
+  buttonActive: { backgroundColor: "#f63b3bff" },
+  buttonDisabled: { backgroundColor: "#e7c3c3ff" },
+  buttonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
+  orText: { textAlign: "center", marginVertical: 16, color: "#6B7280" },
+  skipText: { textAlign: "center", color: "#f63b3bff", fontWeight: "600" },
 });
-
-export default LoginScreen;

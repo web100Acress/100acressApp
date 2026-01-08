@@ -1,18 +1,11 @@
-import React from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import LoginScreen from "./src/component/screens/loginScreen/LoginScreen";
-import HomeScreen from "./src/component/screens/homeScreen/HomeScreen";
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import AppNavigator from './src/navigation/AppNavigator';
 
-const App: React.FC = () => {
+export default function App() {
   return (
-    <SafeAreaProvider>
-      {/* <LoginScreen /> */}
-      <HomeScreen />
-    </SafeAreaProvider>
+    <NavigationContainer>
+      <AppNavigator />
+    </NavigationContainer>
   );
-};
-
-export default App;
-
-
-
+}

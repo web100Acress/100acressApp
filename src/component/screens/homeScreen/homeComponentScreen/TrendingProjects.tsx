@@ -89,9 +89,9 @@ const TrendingProjects = () => {
 
             {/* Actions */}
             <View style={styles.actions}>
-              {/* <Pressable style={styles.exploreBtn}>
+              <Pressable style={styles.exploreBtn}>
                 <Text style={styles.exploreText}>Explore</Text>
-              </Pressable> */}
+              </Pressable>
 
               <Pressable style={styles.iconBtn}>
                 <Text>📞</Text>

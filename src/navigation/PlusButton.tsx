@@ -1,7 +1,7 @@
 import React from "react";
 import { TouchableOpacity, View, StyleSheet, } from "react-native";
 
-const PlusButton = ({ children, onPress }) => {
+const PlusButton = ({ children = null, onPress = () => {} }) => {
 
   return (
     <TouchableOpacity
@@ -18,10 +18,9 @@ export default PlusButton;
 
 const styles = StyleSheet.create({
   container: {
-    top: -20, // lifts the button
+    top: -20, 
     justifyContent: "center",
     alignItems: "center",
-    // paddingTop: -10, 
   },
   button: {
     width: 75,
@@ -31,8 +30,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 5,
-    borderColor: "#fff",
-    // paddingBottom: -10,
-    // elevation: 5,
+    borderColor: "#ffffff",
   },
 });

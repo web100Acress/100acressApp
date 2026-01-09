@@ -7,15 +7,11 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CountryPicker, {
-  Country,
-  CountryCode,
-} from "react-native-country-picker-modal";
+import CountryPicker, { Country, CountryCode } from "react-native-country-picker-modal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
@@ -29,6 +25,9 @@ const bannerImages = [
 
 const LoginScreen = ({ navigation }: any) => {
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [loginType, setLoginType] = useState<"phone" | "email">("phone");
+
   const [countryCode, setCountryCode] = useState<CountryCode>("IN");
   const [callingCode, setCallingCode] = useState("91");
 
@@ -37,14 +36,15 @@ const LoginScreen = ({ navigation }: any) => {
     []
   );
 
-  const isValid = phone.length >= 10;
+  const isValid =
+    loginType === "phone"
+      ? phone.length >= 10
+      : email.includes("@");
 
-  // ❌ No storage — temporary skip
   const skipLogin = () => {
     navigation.replace("BottomTabs");
   };
 
-  // ✅ Store login permanently
   const handleLogin = async () => {
     await AsyncStorage.setItem("isLoggedIn", "true");
     navigation.replace("BottomTabs");
@@ -56,21 +56,59 @@ const LoginScreen = ({ navigation }: any) => {
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "height" : undefined}
       >
-       
-          <View style={styles.bannerContainer}>
-            <Image source={{ uri: randomImage }} style={styles.banner} />
+        <View style={styles.bannerContainer}>
+          <Image source={{ uri: randomImage }} style={styles.banner} />
+        </View>
+
+        <View style={styles.content}>
+          <Text style={styles.title}>Hello Again, Welcome Back!</Text>
+          <Text style={styles.subtitle}>
+            Your personalised property search experience is ready.
+          </Text>
+
+          <Text style={styles.loginText}>
+            Login or Register to get started
+          </Text>
+
+          {/* 🔀 Phone / Email Toggle */}
+          <View style={styles.toggleContainer}>
+            <TouchableOpacity
+              onPress={() => setLoginType("phone")}
+              style={[
+                styles.toggleButton,
+                loginType === "phone" && styles.toggleActive,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.toggleText,
+                  loginType === "phone" && styles.toggleTextActive,
+                ]}
+              >
+                Phone No. 
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => setLoginType("email")}
+              style={[
+                styles.toggleButton,
+                loginType === "email" && styles.toggleActive,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.toggleText,
+                  loginType === "email" && styles.toggleTextActive,
+                ]}
+              >
+                Email
+              </Text>
+            </TouchableOpacity>
           </View>
 
-          <View style={styles.content}>
-            <Text style={styles.title}>Hello Again, Welcome Back!</Text>
-            <Text style={styles.subtitle}>
-              Your personalised property search experience is ready.
-            </Text>
-
-            <Text style={styles.loginText}>
-              Login or Register to get started
-            </Text>
-
+          {/* 📱 Phone Input */}
+          {loginType === "phone" && (
             <View style={styles.phoneContainer}>
               <CountryPicker
                 countryCode={countryCode}
@@ -93,25 +131,39 @@ const LoginScreen = ({ navigation }: any) => {
                 style={styles.input}
               />
             </View>
+          )}
 
-            <TouchableOpacity
-              disabled={!isValid}
-              onPress={handleLogin}
-              style={[
-                styles.button,
-                isValid ? styles.buttonActive : styles.buttonDisabled,
-              ]}
-            >
-              <Text style={styles.buttonText}>Continue</Text>
-            </TouchableOpacity>
+          {/* 📧 Email Input */}
+          {loginType === "email" && (
+            <View style={styles.emailContainer}>
+              <TextInput
+                placeholder="Enter email address"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                value={email}
+                onChangeText={setEmail}
+                style={styles.emailInput}
+              />
+            </View>
+          )}
 
-            <Text style={styles.orText}>OR</Text>
+          <TouchableOpacity
+            disabled={!isValid}
+            onPress={handleLogin}
+            style={[
+              styles.button,
+              isValid ? styles.buttonActive : styles.buttonDisabled,
+            ]}
+          >
+            <Text style={styles.buttonText}>Continue</Text>
+          </TouchableOpacity>
 
-            <TouchableOpacity onPress={skipLogin}>
-              <Text style={styles.skipText}>Do it later</Text>
-            </TouchableOpacity>
-          </View>
+          <Text style={styles.orText}>OR</Text>
 
+          <TouchableOpacity onPress={skipLogin}>
+            <Text style={styles.skipText}>Do it later</Text>
+          </TouchableOpacity>
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -120,23 +172,66 @@ const LoginScreen = ({ navigation }: any) => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    paddingBottom: 40,
-    backgroundColor: "#F8FAFF",
+  bannerContainer: { 
+    height: 480 
   },
-  bannerContainer: { height: 480 },
-  banner: { width, height: "100%", resizeMode: "cover" },
+  banner: { 
+    width, 
+    height: "100%", 
+    resizeMode: "cover" 
+  },
+
   content: {
     backgroundColor: "#fff",
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    marginTop: -60,
+    marginTop: -80,
     padding: 24,
   },
-  title: { fontSize: 24, fontWeight: "700" },
-  subtitle: { fontSize: 14, color: "#6B7280", marginTop: 6 },
-  loginText: { marginTop: 24, fontSize: 16, fontWeight: "600" },
+
+  title: { 
+    fontSize: 24, 
+    fontWeight: "700" 
+  },
+  subtitle: { 
+    fontSize: 14,
+     color: "#6B7280",
+      marginTop: 6 
+    },
+  loginText: { 
+    marginTop: 24, 
+    fontSize: 16, 
+    fontWeight: "600" 
+  },
+
+  toggleContainer: {
+    flexDirection: "row",
+    marginTop: 12,
+    width: "50%",
+  },
+
+  toggleButton: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: "center",
+    borderBottomWidth: 1,
+  },
+
+  toggleActive: {
+  },
+
+  toggleText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#6B7280",
+  },
+
+  toggleTextActive: {
+    color: "#f63b3bff",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+
   phoneContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -147,8 +242,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     gap: 6,
   },
-  countryCode: { fontSize: 16, fontWeight: "600" },
-  input: { flex: 1, height: 48, fontSize: 16 },
+
+  countryCode: { 
+    fontSize: 16, 
+    fontWeight: "600", 
+  },
+  input: { 
+    flex: 1, 
+    height: 48, 
+    fontSize: 16 
+  },
+
+  emailContainer: {
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    borderRadius: 10,
+    paddingHorizontal: 12,
+  },
+
+  emailInput: {
+    height: 48,
+    fontSize: 16,
+  },
+
   button: {
     height: 48,
     borderRadius: 10,
@@ -156,16 +273,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
   },
-  
-  buttonActive: { backgroundColor: "#f63b3bff" },
-  buttonDisabled: { backgroundColor: "#e7c3c3ff" },
-  buttonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
-  orText: { textAlign: "center", marginVertical: 16, color: "#6B7280" },
-  skipText: { 
-    textAlign: "center", 
-    color: "#f63b3bff", 
-    fontWeight: "600", 
-    backgroundColor: '#e7c3c3ff',
+
+  buttonActive: { 
+    backgroundColor: "#f63b3bff" 
+  },
+  buttonDisabled: { 
+    backgroundColor: "#e7c3c3ff" 
+  },
+
+  buttonText: { 
+    color: "#fff", 
+    fontSize: 16, 
+    fontWeight: "600"
+  },
+
+  orText: {
+    textAlign: "center",
+    marginVertical: 16,
+    color: "#6B7280",
+  },
+
+  skipText: {
+    textAlign: "center",
+    color: "#f63b3bff",
+    fontWeight: "600",
+    backgroundColor: "#e7c3c3ff",
     paddingVertical: 10,
     borderRadius: 20,
   },

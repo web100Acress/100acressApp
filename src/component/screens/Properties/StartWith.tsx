@@ -1,17 +1,20 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions } from "react-native";
 import { Linking } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const { width } = Dimensions.get("window");
 
 const actions = [
-  { label: "Buy", icon: "https://img.icons8.com/ios-filled/50/2563EB/home.png"},
-  { label: "Rent", icon: "https://img.icons8.com/ios-filled/50/2563EB/key.png" },
+  { label: "Buy", icon: "https://img.icons8.com/ios-filled/50/2563EB/home.png", Screen:'Buying'},
+  { label: "Rent", icon: "https://img.icons8.com/ios-filled/50/2563EB/key.png", Screen:'Rent' },
   { label: "100shorts", icon: "https://img.icons8.com/ios-filled/50/2563EB/video.png", url:"https://www.youtube.com/@100Acress/shorts" },
-  { label: "Insights", icon: "https://img.icons8.com/ios-filled/50/2563EB/idea.png" },
+  { label: "Insights", icon: "https://img.icons8.com/ios-filled/50/2563EB/idea.png", Screen:'Insights' },
 ];
 
 const StartWith = () => {
+
+  const navigation = useNavigation();
   return (
     <>
       <Text style={styles.title}>Get started with</Text>
@@ -26,7 +29,17 @@ const StartWith = () => {
       >
         {actions.map((item, index) => (
           <TouchableOpacity key={index} style={styles.card}
-          onPress={() => Linking.openURL(item.url ? item.url: "Somthing went wrong")}>
+          onPress={() => {
+            if(item.label === "Buy"){
+              navigation.navigate("Buying");
+            }else if (item.label === "Rent"){
+              navigation.navigate("Rent");
+            }else if (item.label === "Insights"){
+              navigation.navigate("Insights");
+            }else if(item.url){
+              Linking.openURL(item.url)
+            }
+          }}>
             <Image source={{ uri: item.icon }} style={styles.icon} />
             <Text style={styles.text}>{item.label}</Text>
           </TouchableOpacity>

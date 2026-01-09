@@ -5,7 +5,7 @@ import { Linking } from "react-native";
 const { width } = Dimensions.get("window");
 
 const actions = [
-  { label: "Buy", icon: "https://img.icons8.com/ios-filled/50/2563EB/home.png" },
+  { label: "Buy", icon: "https://img.icons8.com/ios-filled/50/2563EB/home.png"},
   { label: "Rent", icon: "https://img.icons8.com/ios-filled/50/2563EB/key.png" },
   { label: "100shorts", icon: "https://img.icons8.com/ios-filled/50/2563EB/video.png", url:"https://www.youtube.com/@100Acress/shorts" },
   { label: "Insights", icon: "https://img.icons8.com/ios-filled/50/2563EB/idea.png" },

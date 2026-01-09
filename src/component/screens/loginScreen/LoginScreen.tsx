@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    marginTop: -30,
+    marginTop: -60,
     padding: 24,
   },
   title: { fontSize: 24, fontWeight: "700" },
@@ -161,5 +161,12 @@ const styles = StyleSheet.create({
   buttonDisabled: { backgroundColor: "#e7c3c3ff" },
   buttonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
   orText: { textAlign: "center", marginVertical: 16, color: "#6B7280" },
-  skipText: { textAlign: "center", color: "#f63b3bff", fontWeight: "600" },
+  skipText: { 
+    textAlign: "center", 
+    color: "#f63b3bff", 
+    fontWeight: "600", 
+    backgroundColor: '#e7c3c3ff',
+    paddingVertical: 10,
+    borderRadius: 20,
+  },
 });

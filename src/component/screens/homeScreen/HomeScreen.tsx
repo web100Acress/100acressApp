@@ -1,11 +1,11 @@
 import React from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
-import HomeHeader from "./homeComponentScreen/HomeHeader";
-import StartWith from "./homeComponentScreen/StartWith";
-import PopularTools from "./homeComponentScreen/PopularTools";
-import RecommendedProjects from "./homeComponentScreen/RecommendedProjects";
-import TrendingProjects from "./homeComponentScreen/TrendingProjects";
-import NewLaunchSection from "./homeComponentScreen/NewLaunchSection";
+import HomeHeader from "./HomeHeader";
+import StartWith from "../Properties/StartWith";
+import PopularTools from "../Properties/PopularTools";
+import RecommendedProjects from "../Properties/RecommendedProjects";
+import TrendingProjects from "../Properties/TrendingProjects";
+import NewLaunchSection from "../Properties/NewLaunchSection";
 
 const HomeScreen = () => {
   return (

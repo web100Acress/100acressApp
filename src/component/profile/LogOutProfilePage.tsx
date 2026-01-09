@@ -18,7 +18,11 @@ const LogOutProfile = ({ navigation }: any) => {
           <Text style={styles.avatarIcon}>👤</Text>
         </View>
 
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Login')}
+      >  
         <Text style={styles.loginTitle}>Login / Register</Text>
+      </TouchableOpacity>
         <Text style={styles.loginSub}>
           Login and access millions of advertiser{'\n'}details on single click
         </Text>

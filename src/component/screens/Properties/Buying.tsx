@@ -100,8 +100,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
     image: {
-    width: 140,
-    height: 140,
+    width: 150,
+    height: 150,
     borderRadius: 12,
     },
 })

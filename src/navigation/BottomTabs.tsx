@@ -47,14 +47,16 @@ const BottomTabs = () => {
             <Pressable
               onPress={handleCall}
               style={{
-                width: 65,
-                height: 65,
+                width: 70,
+                height: 70,
                 borderRadius: 50,
                 backgroundColor: "#cf4040",
                 justifyContent: "center",
                 alignItems: "center",
                 marginTop: -30,
-                right: -30
+                right: -30,
+                borderWidth: 5,
+                borderColor: '#fff'
               }}
             >
               <Text style={{ fontSize: 24, color: "#fff" }}>📞</Text>

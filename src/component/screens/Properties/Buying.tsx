@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity,TextInput } from 'react-native';
 import { Linking } from "react-native";
-import { search } from 'react-native-country-picker-modal/lib/CountryService';
+// import { search } from 'react-native-country-picker-modal/lib/CountryService';
 
 
 const Buying = [

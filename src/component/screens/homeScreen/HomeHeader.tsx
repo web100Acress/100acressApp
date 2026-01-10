@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Image,
+  Dimensions,
+} from "react-native";
 
 const { width } = Dimensions.get("window");
 
@@ -18,8 +24,12 @@ const HomeHeader = () => {
   const [textIndex, setTextIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
+    // ⛔ stop animation when user types
+    if (inputValue.length > 0) return;
+
     const currentText = searchTexts[textIndex];
     const speed = isDeleting ? 40 : 80;
 
@@ -39,7 +49,7 @@ const HomeHeader = () => {
     }, speed);
 
     return () => clearTimeout(timer);
-  }, [charIndex, isDeleting, textIndex]);
+  }, [charIndex, isDeleting, textIndex, inputValue]);
 
   return (
     <>
@@ -51,7 +61,14 @@ const HomeHeader = () => {
       />
 
       <View style={styles.searchContainer}>
-        <Text style={styles.searchAnimated}>{displayText}</Text>
+        <TextInput
+          value={inputValue}
+          onChangeText={setInputValue}
+          placeholder={displayText}
+          placeholderTextColor="#6B7280"
+          style={styles.searchInput}
+          returnKeyType="search"
+        />
       </View>
     </>
   );
@@ -66,19 +83,18 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
     marginHorizontal: 16,
     marginTop: -20,
     backgroundColor: "#fff",
     borderRadius: 20,
     paddingHorizontal: 14,
     height: 48,
+    justifyContent: "center",
     borderWidth: 1,
     borderColor: "#d4b6b6ff",
   },
-  searchAnimated: {
+  searchInput: {
     fontSize: 18,
-    color: "#6B7280",
+    color: "#000",
   },
 });

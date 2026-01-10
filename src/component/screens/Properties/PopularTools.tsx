@@ -1,8 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { RootStackParamList } from "../../../navigation/AppNavigator";
-
+import { useNavigation, NavigationProp, ParamListBase } from "@react-navigation/native";
 
 const tools = [
   {
@@ -23,7 +21,7 @@ const tools = [
 ];
 
 const PopularTools = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Use popular tools</Text>
@@ -35,7 +33,7 @@ const PopularTools = () => {
             if(item.label === "EMI Calculator"){
               navigation.navigate(item.screen)
             }
-            else if(item.label === "BudgetCalculator"){
+            else if(item.label === "Budget Calculator"){
               navigation.navigate(item.screen)
             }
           }}>

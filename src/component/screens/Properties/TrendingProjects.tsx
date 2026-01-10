@@ -85,7 +85,7 @@ const TrendingProjects = () => {
               </View> */}
 
               {/* Wishlist */}
-              <Text style={styles.heart}>♡</Text>
+              {/* <Text style={styles.heart}>♡</Text> */}
             </View>
 
             {/* Details */}

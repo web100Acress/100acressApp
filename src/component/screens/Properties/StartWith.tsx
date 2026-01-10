@@ -6,10 +6,10 @@ import { useNavigation } from "@react-navigation/native";
 const { width } = Dimensions.get("window");
 
 const actions = [
-  { label: "Buy", icon: "https://img.icons8.com/ios-filled/50/2563EB/home.png", Screen:'Buying'},
-  { label: "Rent", icon: "https://img.icons8.com/ios-filled/50/2563EB/key.png", Screen:'Rent' },
+  { label: "Buy", icon: "https://img.icons8.com/ios-filled/50/2563EB/home.png", Screen:"Buying"},
+  { label: "Rent", icon: "https://img.icons8.com/ios-filled/50/2563EB/key.png", Screen:"Rent"},
   { label: "100shorts", icon: "https://img.icons8.com/ios-filled/50/2563EB/video.png", url:"https://www.youtube.com/@100Acress/shorts" },
-  { label: "Insights", icon: "https://img.icons8.com/ios-filled/50/2563EB/idea.png", Screen:'Insights' },
+  { label: "Insights", icon: "https://img.icons8.com/ios-filled/50/2563EB/idea.png", Screen:"Insights" },
 ];
 
 const StartWith = () => {

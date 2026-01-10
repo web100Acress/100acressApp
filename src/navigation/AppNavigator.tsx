@@ -34,7 +34,7 @@ const AppNavigator = () => {
       component={Buying} 
       options={{
         headerShown: true,
-        title: "",
+        title: "Buying Properties",
         headerStyle: { backgroundColor: "#cf4040" },
         headerTintColor: "#fff",
       }}/>

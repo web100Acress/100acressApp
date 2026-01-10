@@ -46,71 +46,13 @@ const RecommendedProjects = () => {
         onChangeText={setSearch}
         style={styles.searchInput}
         />
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-      
+    <ScrollView horizontal showsHorizontalScrollIndicator={false}> 
         {Buying.map((item, index) => (
           <TouchableOpacity
             key={index}
             onPress={() => Linking.openURL(item.url)}
             >
-
-
-            <View style={{ marginRight: 16, marginTop: 12 }}>
-                <Image source={{ uri: item.icon }} style={styles.image} />
-                <Text style={{ fontWeight: "600", marginTop: 8 }}>
-                {item.label}
-                </Text>
-                <Text style={{ color: "#6B7280", marginTop: 4 }}>
-                {item.location}
-                </Text>
-            </View>
-            </TouchableOpacity>
-        ))}
-    </ScrollView>
-
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {Buying.map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => Linking.openURL(item.url)}
-            >
-            <View style={{ marginRight: 16, marginTop: 12 }}>
-                <Image source={{ uri: item.icon }} style={styles.image} />
-                <Text style={{ fontWeight: "600", marginTop: 8 }}>
-                {item.label}
-                </Text>
-                <Text style={{ color: "#6B7280", marginTop: 4 }}>
-                {item.location}
-                </Text>
-            </View>
-            </TouchableOpacity>
-        ))}
-    </ScrollView>
-
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {Buying.map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => Linking.openURL(item.url)}
-            >
-            <View style={{ marginRight: 16, marginTop: 12 }}>
-                <Image source={{ uri: item.icon }} style={styles.image} />
-                <Text style={{ fontWeight: "600", marginTop: 8 }}>
-                {item.label}
-                </Text>
-                <Text style={{ color: "#6B7280", marginTop: 4 }}>
-                {item.location}
-                </Text>
-            </View>
-            </TouchableOpacity>
-        ))}
-    </ScrollView><ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {Buying.map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => Linking.openURL(item.url)}
-            >
-            <View style={{ marginRight: 16, marginTop: 12 }}>
+            <View style={styles.card}>
                 <Image source={{ uri: item.icon }} style={styles.image} />
                 <Text style={{ fontWeight: "600", marginTop: 8 }}>
                 {item.label}
@@ -123,7 +65,7 @@ const RecommendedProjects = () => {
         ))}
     </ScrollView>
     </View>
-    </ScrollView>
+  </ScrollView>
 
   )
 }
@@ -142,6 +84,11 @@ const styles = StyleSheet.create({
     padding:16,
     backgroundColor: "#f8efefff"
     },
+    card:{
+      width: 140,
+     marginRight: 16, 
+     marginTop: 12,
+    },
     title: {
     fontSize: 24,
     fontWeight: "700",
@@ -153,7 +100,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
     image: {
-    width: 240,
+    width: 140,
     height: 140,
     borderRadius: 12,
     },

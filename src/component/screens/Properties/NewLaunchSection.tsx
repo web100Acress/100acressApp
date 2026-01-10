@@ -32,6 +32,17 @@ const PROJECT_DATA = [
     growth: '↑ 31.5% (1Y) in Manyata Tech',
     buttonText: 'View number',
   },
+  {
+    tag: '★ New launch ★',
+    image:
+      'https://100acress-media-bucket.s3.ap-south-1.amazonaws.com/thumbnails/1759123018502-thumb.webp',
+    name: 'SB Urban Park',
+    location: 'Manyata Tech Park, Thanisandra',
+    price: '₹1.97 - 3.7 Cr',
+    type: '3, 4 BHK Apartments',
+    growth: '↑ 31.5% (1Y) in Manyata Tech',
+    buttonText: 'View number',
+  },
 ];
 
 const NewLaunchSection = () => {
@@ -93,14 +104,12 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   header: {
-    // flexDirection: '',
-    alignItems: 'center',
     marginBottom: 4,
   },
   title: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#222',
+    textAlign: 'left',
+    fontSize: 20,
+    fontWeight: "600",
   },
   subtitle: {
     color: '#666',

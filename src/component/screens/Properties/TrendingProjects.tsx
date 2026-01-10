@@ -7,8 +7,17 @@ import {
   ScrollView,
   Dimensions,
   Pressable,
+  Alert
 } from "react-native";
 import { Linking } from "react-native";
+
+const handleCall = () => {
+  const phoneNumber = "tel:+91 8500900100"; 
+
+  Linking.openURL(phoneNumber).catch(() => {
+    Alert.alert("Error", "Unable to open dialer");
+  });
+};
 
 
 const projects = [
@@ -65,7 +74,6 @@ const TrendingProjects = () => {
           <Pressable
             key={item.id}
             style={styles.card}
-            onPress={() => Linking.openURL(item.url)}
           >
             {/* Image */}
             <View>
@@ -89,11 +97,13 @@ const TrendingProjects = () => {
 
             {/* Actions */}
             <View style={styles.actions}>
-              <Pressable style={styles.exploreBtn}>
+              <Pressable 
+                style={styles.exploreBtn}
+                onPress={() => Linking.openURL(item.url)}>
                 <Text style={styles.exploreText}>Explore</Text>
               </Pressable>
 
-              <Pressable style={styles.iconBtn}>
+              <Pressable onPress={handleCall} style={styles.iconBtn}>
                 <Text>📞</Text>
               </Pressable>
 
@@ -126,7 +136,7 @@ const TrendingProjects = () => {
               </View> */}
 
               {/* Wishlist */}
-              <Text style={styles.heart}>♡</Text>
+              {/* <Text style={styles.heart}>♡</Text> */}
             </View>
 
             {/* Details */}

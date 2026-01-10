@@ -7,7 +7,6 @@ const PlusButton = ({ children = null, onPress = () => {} }) => {
     <TouchableOpacity
       style={styles.container}
       onPress={onPress}
-      activeOpacity={0.8}
     >
       <View style={styles.button}>{children}</View>
     </TouchableOpacity>
@@ -18,7 +17,6 @@ export default PlusButton;
 
 const styles = StyleSheet.create({
   container: {
-    top: -20, 
     justifyContent: "center",
     alignItems: "center",
   },

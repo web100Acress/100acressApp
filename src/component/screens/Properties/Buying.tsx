@@ -64,6 +64,63 @@ const RecommendedProjects = () => {
             </TouchableOpacity>
         ))}
     </ScrollView>
+
+    <ScrollView horizontal showsHorizontalScrollIndicator={false}> 
+        {Buying.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => Linking.openURL(item.url)}
+            >
+            <View style={styles.card}>
+                <Image source={{ uri: item.icon }} style={styles.image} />
+                <Text style={{ fontWeight: "600", marginTop: 8 }}>
+                {item.label}
+                </Text>
+                <Text style={{ color: "#6B7280", marginTop: 4 }}>
+                {item.location}
+                </Text>
+            </View>
+            </TouchableOpacity>
+        ))}
+    </ScrollView>
+
+    <ScrollView horizontal showsHorizontalScrollIndicator={false}> 
+        {Buying.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => Linking.openURL(item.url)}
+            >
+            <View style={styles.card}>
+                <Image source={{ uri: item.icon }} style={styles.image} />
+                <Text style={{ fontWeight: "600", marginTop: 8 }}>
+                {item.label}
+                </Text>
+                <Text style={{ color: "#6B7280", marginTop: 4 }}>
+                {item.location}
+                </Text>
+            </View>
+            </TouchableOpacity>
+        ))}
+    </ScrollView>
+
+    <ScrollView horizontal showsHorizontalScrollIndicator={false}> 
+        {Buying.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => Linking.openURL(item.url)}
+            >
+            <View style={styles.card}>
+                <Image source={{ uri: item.icon }} style={styles.image} />
+                <Text style={{ fontWeight: "600", marginTop: 8 }}>
+                {item.label}
+                </Text>
+                <Text style={{ color: "#6B7280", marginTop: 4 }}>
+                {item.location}
+                </Text>
+            </View>
+            </TouchableOpacity>
+        ))}
+    </ScrollView>    
     </View>
   </ScrollView>
 
@@ -77,31 +134,32 @@ const styles = StyleSheet.create({
       paddingHorizontal: 10,
       paddingVertical: 15,
       backgroundColor: '#ffffffff',
-      borderRadius: 15,
+      borderRadius: 6,
       color: '#000000'
     },
     container:{
-    padding:16,
-    backgroundColor: "#f8efefff"
+      padding:16,
+      backgroundColor: "#f8efefff",
     },
     card:{
-      width: 140,
-     marginRight: 16, 
-     marginTop: 12,
+      width: 150,
+      marginRight: 8, 
+      marginTop: 12,
+    },
+    image: {
+      width: 150,
+      height: 150,
+      borderRadius: 5,
     },
     title: {
-    fontSize: 24,
-    fontWeight: "700",
-    marginTop: 12,
+      fontSize: 24,
+      fontWeight: "700",
+      marginTop: 12,
     },
     subtitle: {
-    fontSize: 14,
-    color: "#6B7280",
-    marginTop: 10,
-  },
-    image: {
-    width: 150,
-    height: 150,
-    borderRadius: 12,
+      fontSize: 14,
+      color: "#6B7280",
+      marginTop: 10,
     },
+    
 })

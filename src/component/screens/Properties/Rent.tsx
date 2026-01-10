@@ -5,7 +5,7 @@ import { Linking } from "react-native";
 import { search } from 'react-native-country-picker-modal/lib/CountryService';
 
 
-const Buying = [
+const Rent = [
     { 
         icon:"https://100acress-media-bucket.s3.ap-south-1.amazonaws.com/thumbnails/1763702902013-thumb.webp",
         label:"Smartworld GIC",
@@ -34,7 +34,7 @@ const Buying = [
 
 ]
 
-const Rent = () => {
+const RecommendedProjects = () => {
 
   const [search, setSearch] = useState("");
   return (
@@ -46,16 +46,13 @@ const Rent = () => {
         onChangeText={setSearch}
         style={styles.searchInput}
         />
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-      
-        {Buying.map((item, index) => (
+    <ScrollView horizontal showsHorizontalScrollIndicator={false}> 
+        {Rent.map((item, index) => (
           <TouchableOpacity
             key={index}
             onPress={() => Linking.openURL(item.url)}
             >
-
-
-            <View style={{ marginRight: 16, marginTop: 12 }}>
+            <View style={styles.card}>
                 <Image source={{ uri: item.icon }} style={styles.image} />
                 <Text style={{ fontWeight: "600", marginTop: 8 }}>
                 {item.label}
@@ -68,13 +65,13 @@ const Rent = () => {
         ))}
     </ScrollView>
 
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {Buying.map((item, index) => (
+    <ScrollView horizontal showsHorizontalScrollIndicator={false}> 
+        {Rent.map((item, index) => (
           <TouchableOpacity
             key={index}
             onPress={() => Linking.openURL(item.url)}
             >
-            <View style={{ marginRight: 16, marginTop: 12 }}>
+            <View style={styles.card}>
                 <Image source={{ uri: item.icon }} style={styles.image} />
                 <Text style={{ fontWeight: "600", marginTop: 8 }}>
                 {item.label}
@@ -87,30 +84,13 @@ const Rent = () => {
         ))}
     </ScrollView>
 
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {Buying.map((item, index) => (
+    <ScrollView horizontal showsHorizontalScrollIndicator={false}> 
+        {Rent.map((item, index) => (
           <TouchableOpacity
             key={index}
             onPress={() => Linking.openURL(item.url)}
             >
-            <View style={{ marginRight: 16, marginTop: 12 }}>
-                <Image source={{ uri: item.icon }} style={styles.image} />
-                <Text style={{ fontWeight: "600", marginTop: 8 }}>
-                {item.label}
-                </Text>
-                <Text style={{ color: "#6B7280", marginTop: 4 }}>
-                {item.location}
-                </Text>
-            </View>
-            </TouchableOpacity>
-        ))}
-    </ScrollView><ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {Buying.map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => Linking.openURL(item.url)}
-            >
-            <View style={{ marginRight: 16, marginTop: 12 }}>
+            <View style={styles.card}>
                 <Image source={{ uri: item.icon }} style={styles.image} />
                 <Text style={{ fontWeight: "600", marginTop: 8 }}>
                 {item.label}
@@ -122,39 +102,64 @@ const Rent = () => {
             </TouchableOpacity>
         ))}
     </ScrollView>
+
+    <ScrollView horizontal showsHorizontalScrollIndicator={false}> 
+        {Rent.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => Linking.openURL(item.url)}
+            >
+            <View style={styles.card}>
+                <Image source={{ uri: item.icon }} style={styles.image} />
+                <Text style={{ fontWeight: "600", marginTop: 8 }}>
+                {item.label}
+                </Text>
+                <Text style={{ color: "#6B7280", marginTop: 4 }}>
+                {item.location}
+                </Text>
+            </View>
+            </TouchableOpacity>
+        ))}
+    </ScrollView>    
     </View>
-    </ScrollView>
+  </ScrollView>
 
   )
 }
 
-export default Rent;
+export default RecommendedProjects;
 
 const styles = StyleSheet.create({
     searchInput:{
       paddingHorizontal: 10,
       paddingVertical: 15,
       backgroundColor: '#ffffffff',
-      borderRadius: 15,
+      borderRadius: 6,
       color: '#000000'
     },
     container:{
-    padding:16,
-    backgroundColor: "#f8efefff"
+      padding:16,
+      backgroundColor: "#f8efefff",
+    },
+    card:{
+      width: 150,
+      marginRight: 8, 
+      marginTop: 12,
+    },
+    image: {
+      width: 150,
+      height: 150,
+      borderRadius: 5,
     },
     title: {
-    fontSize: 24,
-    fontWeight: "700",
-    marginTop: 12,
+      fontSize: 24,
+      fontWeight: "700",
+      marginTop: 12,
     },
     subtitle: {
-    fontSize: 14,
-    color: "#6B7280",
-    marginTop: 10,
-  },
-    image: {
-    width: 240,
-    height: 140,
-    borderRadius: 12,
+      fontSize: 14,
+      color: "#6B7280",
+      marginTop: 10,
     },
+    
 })

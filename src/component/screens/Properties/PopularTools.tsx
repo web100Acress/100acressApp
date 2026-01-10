@@ -1,10 +1,13 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+
 
 const tools = [
   {
     label: "EMI Calculator",
     icon: "https://img.icons8.com/ios-filled/50/000000/mortgage.png",
+    route: "EmiCalculator"
   },
   {
     label: "Budget Calculator",
@@ -17,6 +20,7 @@ const tools = [
 ];
 
 const PopularTools = () => {
+  const navigation = useNavigation()
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Use popular tools</Text>
@@ -24,7 +28,11 @@ const PopularTools = () => {
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {tools.map((item) => (
-          <TouchableOpacity  key={item.label}>
+          <TouchableOpacity  key={item.label} onPress={() => {
+            if(item.label === "EMI Calculator"){
+              navigation.navigate(item.route)
+            }
+          }}>
             <View style={styles.card}>
             <Image source={{ uri: item.icon }} style={styles.icon} />
             <Text style={styles.text}>{item.label}</Text>

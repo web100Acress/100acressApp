@@ -5,9 +5,7 @@ const Insights = () => {
   return (
     <ScrollView>
       <View>
-        <Image uri={{}}>
-
-        </Image>
+        <Text>Hello User's</Text>
       </View>
     </ScrollView>
   )

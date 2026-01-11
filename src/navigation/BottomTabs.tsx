@@ -1,15 +1,14 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Text, Linking, Alert } from "react-native";
+import { Text, Linking, Alert, Pressable } from "react-native";
 
 import HomeScreen from "../component/screens/homeScreen/HomeScreen";
 import ProfileScreen from "../component/profile/LogOutProfilePage";
-import PlusButton from "./PlusButton";
 
 const Tab = createBottomTabNavigator();
 
 const handleCall = () => {
-  const phoneNumber = "tel:+91 8500900100"; 
+  const phoneNumber = "tel:+918500900100"; // ✅ no spaces
 
   Linking.openURL(phoneNumber).catch(() => {
     Alert.alert("Error", "Unable to open dialer");
@@ -39,23 +38,30 @@ const BottomTabs = () => {
         }}
       />
 
-      {/* CENTER PLUS BUTTON */}
+      {/* CENTER CALL BUTTON */}
       <Tab.Screen
         name="Call"
-        component={HomeScreen} // dummy, won’t be used
+        component={HomeScreen} 
         options={{
-          tabBarIcon: () => (
-            <Text style={{ fontSize: 20 }}>📞</Text>
-          ),
-          tabBarButton: (props) => (
-            <PlusButton
-              {...props}
+          tabBarButton: () => (
+            <Pressable
               onPress={handleCall}
-            />
+              style={{
+                width: 65,
+                height: 65,
+                borderRadius: 50,
+                backgroundColor: "#cf4040",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: -30,
+                right: -30
+              }}
+            >
+              <Text style={{ fontSize: 24, color: "#fff" }}>📞</Text>
+            </Pressable>
           ),
         }}
       />
-
 
       <Tab.Screen
         name="Profile"

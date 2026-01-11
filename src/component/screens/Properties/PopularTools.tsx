@@ -4,14 +4,14 @@ import { useNavigation, NavigationProp, ParamListBase } from "@react-navigation/
 
 const tools = [
   {
-    label: "EMI Calculator",
-    icon: "https://img.icons8.com/ios-filled/50/000000/mortgage.png",
-    screen: "EmiCalculator"
-  },
-  {
     label: "Budget Calculator",
     icon: "https://img.icons8.com/ios-filled/50/000000/calculator.png",
     screen: "BudgetCalculator"
+  },
+  {
+    label: "EMI Calculator",
+    icon: "https://img.icons8.com/ios-filled/50/000000/mortgage.png",
+    screen: "EmiCalculator"
   },
   {
     label: "Property Insights",

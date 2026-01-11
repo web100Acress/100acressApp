@@ -1,70 +1,99 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-} from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
 
+// Slider value → Savings in Crores
+const getSavingsFromSlider = (value: number) => {
+  if (value <= 100) {
+    return value / 100; // 0–1 Cr (Lakhs)
+  }
+  return 1 + (value - 100) * (49 / 400); // 1–50 Cr
+};
+
+// Smart formatter: Lakh or Crore
+const formatAmount = (amount: number) => {
+  if (amount < 100000) {
+    return `₹ ${(amount / 100000).toFixed(2)} Lakh`;
+  }
+  return `₹ ${(amount / 10000000).toFixed(2)} Cr`;
+};
+
+const FIXED_INTEREST_RATE = 8; // %
 
 const BudgetCalculator = () => {
-  const [loanAmount, setLoanAmount] = useState(14.3); 
-  const [interestRate, setInterestRate] = useState(8);
-  const [tenure, setTenure] = useState(30);
+  const [savingsSlider, setSavingsSlider] = useState(50);
+  const [affordableEmi, setAffordableEmi] = useState(50000);
+  const [tenure, setTenure] = useState(20);
+
+  const savings = useMemo(
+    () => getSavingsFromSlider(savingsSlider) * 10000000,
+    [savingsSlider]
+  );
+
+  const calculation = useMemo(() => {
+    const monthlyRate = FIXED_INTEREST_RATE / 12 / 100;
+    const months = tenure * 12;
+
+    const loanAmount =
+      affordableEmi *
+      ((Math.pow(1 + monthlyRate, months) - 1) /
+        (monthlyRate * Math.pow(1 + monthlyRate, months)));
+
+    return {
+      loanAmount,
+      totalBudget: loanAmount + savings,
+    };
+  }, [savings, affordableEmi, tenure]);
 
   return (
     <View style={styles.container}>
-      
-      {/* EMI Section */}
-      <Text style={styles.subTitle}>Estimated EMI per month you may consider</Text>
-      <Text style={styles.emi}>₹ 10.49 lacs</Text>
+      <Text style={styles.subTitle}>Budget Calculator</Text>
+      <Text style={styles.emi}>
+        {formatAmount(calculation.totalBudget)}
+      </Text>
 
-      {/* Loan Amount */}
+      {/* Savings */}
       <View style={styles.row}>
-        <Text style={styles.label}>Loan Amount</Text>
-        <Text style={styles.value}>₹ {loanAmount.toFixed(2)} Crores</Text>
+        <Text style={styles.label}>Savings for Home</Text>
+        <Text style={styles.value}>{formatAmount(savings)}</Text>
       </View>
 
       <Slider
-        minimumValue={1}
-        maximumValue={27}
-        value={loanAmount}
-        onValueChange={setLoanAmount}
-        minimumTrackTintColor="#1976D2"
-        maximumTrackTintColor="#E0E0E0"
-        thumbTintColor="#1976D2"
+        minimumValue={0}
+        maximumValue={500}
+        step={1}
+        value={savingsSlider}
+        onValueChange={setSavingsSlider}
+        minimumTrackTintColor="#d21919ff"
+        thumbTintColor="#d21919ff"
       />
 
       <View style={styles.rangeRow}>
-        <Text>₹ 1 Lac</Text>
-        <Text>₹ 27 Crores</Text>
+        <Text>₹ 0</Text>
+        <Text>₹ 50 Cr</Text>
       </View>
 
-      {/* Interest Rate */}
+      {/* EMI */}
       <View style={styles.row}>
-        <Text style={styles.label}>Interest rate %</Text>
-        <Text style={styles.value}>{interestRate.toFixed(1)}%</Text>
+        <Text style={styles.label}>EMI you can afford</Text>
+        <Text style={styles.value}>
+          ₹ {affordableEmi.toLocaleString('en-IN')}
+        </Text>
       </View>
 
       <Slider
-        minimumValue={7}
-        maximumValue={15}
-        step={0.1}
-        value={interestRate}
-        onValueChange={setInterestRate}
-        minimumTrackTintColor="#1976D2"
-        maximumTrackTintColor="#E0E0E0"
-        thumbTintColor="#1976D2"
+        minimumValue={0}
+        maximumValue={1000000}
+        step={1000}
+        value={affordableEmi}
+        onValueChange={setAffordableEmi}
+        minimumTrackTintColor="#d21919ff"
+        thumbTintColor="#d21919ff"
       />
-
-      <View style={styles.rangeRow}>
-        <Text>7.0%</Text>
-        <Text>15.0%</Text>
-      </View>
 
       {/* Tenure */}
       <View style={styles.row}>
-        <Text style={styles.label}>Preferred loan tenure</Text>
+        <Text style={styles.label}>Loan Tenure</Text>
         <Text style={styles.value}>{tenure} years</Text>
       </View>
 
@@ -74,21 +103,25 @@ const BudgetCalculator = () => {
         step={1}
         value={tenure}
         onValueChange={setTenure}
-        minimumTrackTintColor="#1976D2"
-        maximumTrackTintColor="#E0E0E0"
-        thumbTintColor="#1976D2"
+        minimumTrackTintColor="#d21919ff"
+        thumbTintColor="#d21919ff"
       />
 
-      <View style={styles.rangeRow}>
-        <Text>1 years</Text>
-        <Text>30 years</Text>
+      {/* Summary */}
+      <View style={styles.summaryBox}>
+        <Text style={styles.summaryLabel}>Max Loan Amount</Text>
+        <Text style={styles.summaryValue}>
+          {formatAmount(calculation.loanAmount)}
+        </Text>
       </View>
-
     </View>
   );
 };
 
 export default BudgetCalculator;
+
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -97,8 +130,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   subTitle: {
-    fontSize: 14,
-    color: '#555',
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#000000ff',
     marginBottom: 8,
   },
   emi: {
@@ -125,4 +159,28 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 10,
   },
+  summaryBox: {
+  marginTop: 10,
+  padding: 16,
+  backgroundColor: '#fcd3d3ff',
+  borderRadius: 10,
+},
+
+summaryRow: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+
+},
+
+summaryLabel: {
+  fontSize: 16,
+  color: '#000',
+},
+
+summaryValue: {
+  fontSize: 16,
+  fontWeight: '600',
+  color: '#000',
+},
+
 });

@@ -33,7 +33,8 @@ const AppNavigator = () => {
 
       <Stack.Screen
       name="BottomTabs" 
-      component={BottomTabs} />
+      component={BottomTabs}
+      options={{headerShown: false}} />
 
       <Stack.Screen 
       name="Buying" 

@@ -148,11 +148,11 @@ const TrendingProjects = () => {
 
             {/* Actions */}
             <View style={styles.actions}>
-              <Pressable style={styles.exploreBtn}>
+              <Pressable  onPress={() => Linking.openURL(item.url)} style={styles.exploreBtn}>
                 <Text style={styles.exploreText}>Explore</Text>
               </Pressable>
 
-              <Pressable style={styles.iconBtn}>
+              <Pressable onPress={handleCall} style={styles.iconBtn}>
                 <Text>📞</Text>
               </Pressable>
 

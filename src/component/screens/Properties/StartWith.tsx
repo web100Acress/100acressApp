@@ -1,7 +1,13 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions } from "react-native";
 import { Linking } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+
+type RootStackParamList = {
+  Buying: undefined;
+  Rent: undefined;
+  Insights: undefined;
+};
 
 const { width } = Dimensions.get("window");
 
@@ -14,7 +20,7 @@ const actions = [
 
 const StartWith = () => {
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <>
       <Text style={styles.title}>Get started with</Text>

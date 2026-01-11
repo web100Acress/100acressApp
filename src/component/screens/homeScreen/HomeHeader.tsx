@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
 } from "react-native";
+import { fetchActiveBanners, pickBestBannerUrl } from "../../../api/bannerService"; 
 
 const { width } = Dimensions.get("window");
 
@@ -26,6 +27,7 @@ const HomeHeader = () => {
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [bannerUrl, setBannerUrl] = useState<string | null>(null);
 
   useEffect(() => {
     // ⛔ stop animation when user types

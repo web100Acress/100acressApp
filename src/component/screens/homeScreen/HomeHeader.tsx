@@ -21,9 +21,6 @@ const HomeHeader = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [bannerUrl, setBannerUrl] = useState<string | null>(null);
 
-  const fallbackBannerUrl =
-    "https://d16gdc5rm7f21b.cloudfront.net/uploads/1767509876741-oberoi-360-north-mobile.webp";
-
   useEffect(() => {
     const currentText = searchTexts[textIndex];
     const speed = isDeleting ? 40 : 80;
@@ -69,12 +66,14 @@ const HomeHeader = () => {
 
   return (
     <>
-      <Image
-        source={{
-          uri: bannerUrl || fallbackBannerUrl,
-        }}
-        style={styles.banner}
-      />
+      {bannerUrl ? (
+        <Image
+          source={{
+            uri: bannerUrl,
+          }}
+          style={styles.banner}
+        />
+      ) : null}
 
       <View style={styles.searchContainer}>
         <Text style={styles.searchAnimated}>{displayText}</Text>

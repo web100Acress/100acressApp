@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
+import { fetchActiveBanners, pickBestBannerUrl } from "../../../api/bannerService";
 
 const { width } = Dimensions.get("window");
 
@@ -18,6 +19,10 @@ const HomeHeader = () => {
   const [textIndex, setTextIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [bannerUrl, setBannerUrl] = useState<string | null>(null);
+
+  const fallbackBannerUrl =
+    "https://d16gdc5rm7f21b.cloudfront.net/uploads/1767509876741-oberoi-360-north-mobile.webp";
 
   useEffect(() => {
     const currentText = searchTexts[textIndex];
@@ -41,11 +46,32 @@ const HomeHeader = () => {
     return () => clearTimeout(timer);
   }, [charIndex, isDeleting, textIndex]);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    (async () => {
+      try {
+        const banners = await fetchActiveBanners();
+        console.log("HomeHeader: active banners fetched:", banners?.length || 0);
+        const url = pickBestBannerUrl(banners[0]);
+        console.log("HomeHeader: selected banner url:", url);
+        if (isMounted) setBannerUrl(url);
+      } catch {
+        console.log("HomeHeader: failed to fetch banners, using fallback");
+        if (isMounted) setBannerUrl(null);
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <>
       <Image
         source={{
-          uri: "https://d16gdc5rm7f21b.cloudfront.net/uploads/1767509876741-oberoi-360-north-mobile.webp",
+          uri: bannerUrl || fallbackBannerUrl,
         }}
         style={styles.banner}
       />

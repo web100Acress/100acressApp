@@ -13,6 +13,7 @@ const searchTexts = [
   "Search Golf Course Extn Road",
   "Search NH-48",
 ];
+// added by aman
 
 const HomeHeader = () => {
   const [displayText, setDisplayText] = useState("");

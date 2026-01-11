@@ -18,6 +18,7 @@ const searchTexts = [
   "Search Golf Course Extn Road",
   "Search NH-48",
 ];
+// added by aman
 
 const HomeHeader = () => {
   const [displayText, setDisplayText] = useState("");
@@ -51,14 +52,37 @@ const HomeHeader = () => {
     return () => clearTimeout(timer);
   }, [charIndex, isDeleting, textIndex, inputValue]);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    (async () => {
+      try {
+        const banners = await fetchActiveBanners();
+        console.log("HomeHeader: active banners fetched:", banners?.length || 0);
+        const url = pickBestBannerUrl(banners[0]);
+        console.log("HomeHeader: selected banner url:", url);
+        if (isMounted) setBannerUrl(url);
+      } catch {
+        console.log("HomeHeader: failed to fetch banners, using fallback");
+        if (isMounted) setBannerUrl(null);
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <>
-      <Image
-        source={{
-          uri: "https://d16gdc5rm7f21b.cloudfront.net/uploads/1767509876741-oberoi-360-north-mobile.webp",
-        }}
-        style={styles.banner}
-      />
+      {bannerUrl ? (
+        <Image
+          source={{
+            uri: bannerUrl,
+          }}
+          style={styles.banner}
+        />
+      ) : null}
 
       <View style={styles.searchContainer}>
         <TextInput
@@ -98,3 +122,6 @@ const styles = StyleSheet.create({
     color: "#000",
   },
 });
+
+
+// qhgsvaHS

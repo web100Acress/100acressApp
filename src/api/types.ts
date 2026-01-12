@@ -4,6 +4,11 @@ export type BannerImage = {
   cdn_url?: string;
 };
 
+export type TrendingProjectImage = {
+  url?: string;
+  cdn_url?: string;
+};
+
 export type Banner = {
   _id: string;
   title: string;
@@ -17,7 +22,21 @@ export type Banner = {
   updatedAt?: string;
 };
 
+export type TrendingProject = {
+  _id: string;
+  title: string;
+  price: string;
+  location: string;
+  slug: string;
+  image: TrendingProjectImage;
+};
+
 export type ActiveBannersResponse = {
   success: boolean;
   banners: Banner[];
+};
+
+export type TrendingProjectsResponse = {
+  success: boolean;
+  projects: TrendingProject[];
 };

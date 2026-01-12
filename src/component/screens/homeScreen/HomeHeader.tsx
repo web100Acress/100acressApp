@@ -6,7 +6,7 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-import { fetchActiveBanners, pickBestBannerUrl } from "../../../api/bannerService"; 
+import { fetchActiveBanners, pickBestBannerUrl } from "../../../api/Services/bannerService"; 
 
 const { width } = Dimensions.get("window");
 

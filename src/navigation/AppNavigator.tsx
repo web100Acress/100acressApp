@@ -86,16 +86,6 @@ const AppNavigator = () => {
         headerTintColor: "#fff",
       }}/>
 
-      {/* <Stack.Screen 
-      name="EmiCalculator" 
-      component={EmiCalculator}
-      options={{
-        headerShown: true,
-        title: "Calculate EMI",
-        headerStyle: { backgroundColor: "#cf4040" },
-        headerTintColor: "#fff",
-      }}/> */}
-
     </Stack.Navigator>
   );
 };

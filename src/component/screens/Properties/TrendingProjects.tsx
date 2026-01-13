@@ -257,3 +257,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffe5e5ff",
   },
 });
+
+
+// ritika mitika

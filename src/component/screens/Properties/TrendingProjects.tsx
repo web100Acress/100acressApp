@@ -100,4 +100,7 @@ const styles = StyleSheet.create({
 
 
 
+
 // Aaman pagal
+
+

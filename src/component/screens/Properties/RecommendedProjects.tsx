@@ -1,64 +1,53 @@
-import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
-import { Linking } from 'react-native';
-import { getRecommendedProjects } from '../../../api/Services/recommendedApi';
-
-interface RecommendedProject {
-  icon: string;
-  label: string;
-  location: string;
-  url: string;
-}
+import React, { useEffect } from 'react';
+import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Linking } from "react-native";
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { fetchRecommendedProjects, Project } from '../../../redux/slice/projectSlice';
 
 const RecommendedProjects = () => {
-  const [projects, setProjects] = useState<RecommendedProject[]>([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useAppDispatch();
+  const { recommended, loading, error } = useAppSelector((state) => state.project);
 
   useEffect(() => {
-    const loadProjects = async () => {
-      try {
-        const data = await getRecommendedProjects();
-        setProjects(data);
-      } catch (error) {
-        console.log('API error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadProjects();
-  }, []);
+    dispatch(fetchRecommendedProjects());
+  }, [dispatch]);
 
   if (loading) {
-    return <Text style={{ padding: 16 }}>Loading...</Text>;
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Recommended Projects</Text>
+        <Text style={styles.subtitle}>Discover premium properties handpicked for luxury living and exceptional investment returns</Text>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Recommended Projects</Text>
+        <Text style={styles.subtitle}>Discover premium properties handpicked for luxury living and exceptional investment returns</Text>
+        <Text style={{ color: 'red' }}>Error: {error}</Text>
+      </View>
+    );
   }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Recommended Projects</Text>
-      <Text style={styles.subtitle}>
-        Discover premium properties handpicked for luxury living and exceptional investment returns
-      </Text>
-
+      <Text style={styles.subtitle}>Discover premium properties handpicked for luxury living and exceptional investment returns</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {projects.map((item, index) => (
+        {recommended.map((item, index) => (
           <TouchableOpacity
             key={index}
-            onPress={() => Linking.openURL(item.url)}
+            onPress={() => Linking.openURL(`https://www.100acress.com/${item.project_url}`)}
           >
             <View style={{ marginRight: 16, marginTop: 12 }}>
-              <Image source={{ uri: item.icon }} style={styles.image} />
-              <Text style={{ fontWeight: '600', marginTop: 8 }}>
-                {item.label}
+              <Image source={{ uri: item.thumbnailImage }} style={styles.image} />
+              <Text style={{ fontWeight: "600", marginTop: 8 }}>
+                {item.projectName}
               </Text>
-              <Text style={{ color: '#6B7280', marginTop: 4 }}>
+              <Text style={{ color: "#6B7280", marginTop: 4 }}>
                 {item.location}
               </Text>
             </View>
@@ -73,22 +62,22 @@ export default RecommendedProjects;
 
 
 const styles = StyleSheet.create({
-    container:{
-    padding:16,
-    },
-    title: {
+  container: {
+    padding: 16,
+  },
+  title: {
     fontSize: 24,
     fontWeight: "700",
     marginTop: 12,
-    },
-    subtitle: {
+  },
+  subtitle: {
     fontSize: 14,
     color: "#6B7280",
     marginTop: 10,
   },
-    image: {
+  image: {
     width: 250,
     height: 140,
     borderRadius: 12,
-    },
-})
+  },
+});

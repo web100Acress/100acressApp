@@ -130,6 +130,6 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     fontSize: 18,
-    color: "#000",
+    color: "#00000",
   },
 });

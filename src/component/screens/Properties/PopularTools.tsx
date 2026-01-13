@@ -1,26 +1,27 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-
+import { useNavigation, NavigationProp, ParamListBase } from "@react-navigation/native";
 
 const tools = [
   {
-    label: "EMI Calculator",
-    icon: "https://img.icons8.com/ios-filled/50/000000/mortgage.png",
-    route: "EmiCalculator"
-  },
-  {
     label: "Budget Calculator",
     icon: "https://img.icons8.com/ios-filled/50/000000/calculator.png",
+    screen: "BudgetCalculator"
+  },
+  {
+    label: "EMI Calculator",
+    icon: "https://img.icons8.com/ios-filled/50/000000/mortgage.png",
+    screen: "EmiCalculator"
   },
   {
     label: "Property Insights",
     icon: "https://img.icons8.com/ios-filled/50/000000/idea.png",
+    screen: "PropertyInsights"
   },
 ];
 
 const PopularTools = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Use popular tools</Text>
@@ -30,7 +31,10 @@ const PopularTools = () => {
         {tools.map((item) => (
           <TouchableOpacity  key={item.label} onPress={() => {
             if(item.label === "EMI Calculator"){
-              navigation.navigate(item.route)
+              navigation.navigate(item.screen)
+            }
+            else if(item.label === "Budget Calculator"){
+              navigation.navigate(item.screen)
             }
           }}>
             <View style={styles.card}>
@@ -61,9 +65,9 @@ const styles = StyleSheet.create({
   },
   card: {
     width: 150,
-    height: 100,
+    height: 110,
     backgroundColor: "#fff",
-    borderRadius: 12,
+    borderRadius: 5,
     marginRight: 16,
     alignItems: "center",
     justifyContent: "center",
@@ -72,7 +76,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 32,
     height: 32,
-    marginBottom: 8,
+    margin: 15,
     tintColor: "#cf4040ff",
   },
   text: {

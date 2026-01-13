@@ -13,10 +13,11 @@ const HomeScreen = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <HomeHeader />
         <StartWith />
-        <PopularTools />
         <RecommendedProjects />
         <TrendingProjects />
         <NewLaunchSection />
+        <PopularTools />
+
       </ScrollView>
     </View>
   );

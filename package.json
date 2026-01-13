@@ -1,5 +1,5 @@
 {
-  "name": "hundredAcress",
+  "name": "hundred-acres",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -11,15 +11,19 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.2.0",
+    "@react-native-community/slider": "^5.1.1",
     "@react-native/new-app-screen": "0.83.1",
     "@react-navigation/bottom-tabs": "^7.9.0",
     "@react-navigation/native": "^7.1.26",
     "@react-navigation/native-stack": "^7.9.0",
+    "@reduxjs/toolkit": "^2.11.2",
     "react": "19.2.0",
     "react-native": "0.83.1",
+    "react-native-country-codes-picker": "^2.3.5",
     "react-native-country-picker-modal": "^2.0.0",
     "react-native-safe-area-context": "^5.6.2",
-    "react-native-screens": "^4.19.0"
+    "react-native-screens": "^4.19.0",
+    "react-redux": "^9.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

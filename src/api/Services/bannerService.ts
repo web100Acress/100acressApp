@@ -1,5 +1,5 @@
-import { apiRequest } from "./apiClient";
-import type { ActiveBannersResponse, Banner } from "./types";
+import { apiRequest } from "../apiClient";
+import type { ActiveBannersResponse, Banner } from "../types";
 
 export async function fetchActiveBanners(): Promise<Banner[]> {
   const res = await apiRequest<ActiveBannersResponse>("/api/banners/active");

@@ -1,20 +1,15 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from './src/navigation/AppNavigator';
-// import MainTabs from './src/navigation/BottomTabs';
-// import LogOutProfilePage from './src/component/profile/LogOutProfilePage';
-
+import { Provider } from 'react-redux';
+import { store } from './src/Redux/trending/store'; // <-- path specify karna zaruri hai
 
 export default function App() {
   return (
-    <NavigationContainer>
-
-      <AppNavigator />
-    </NavigationContainer>
-    // <ScrollView>
-
-    //   <LogOutProfilePage />
-    // </ScrollView>
+    <Provider store={store}>
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+    </Provider>
   );
 }

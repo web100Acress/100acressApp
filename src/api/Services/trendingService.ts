@@ -10,7 +10,7 @@ export async function fetchTrendingProjects(): Promise<TrendingProject[]> {
   try {
     console.log("📡 Calling /trending API...");
 
-    const res = await apiRequest<TrendingProjectsResponse>("/api/trending");
+    const res = await apiRequest<TrendingProjectsResponse>("/Trending");
 
     console.log("✅ /trending API RESPONSE:", res);
 
@@ -18,7 +18,6 @@ export async function fetchTrendingProjects(): Promise<TrendingProject[]> {
       console.warn("⚠️ API returned EMPTY response");
       return [];
     }
-
     if (!res.projects) {
       console.warn("⚠️ 'projects' key missing in response");
       console.log("🔍 Full response keys:", Object.keys(res));

@@ -19,7 +19,6 @@ const searchTexts = [
   "Search Golf Course Extn Road",
   "Search NH-48",
 ];
-// added by aman
 
 const HomeHeader = () => {
   const [displayText, setDisplayText] = useState("");
@@ -27,10 +26,11 @@ const HomeHeader = () => {
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [bannerUrl, setBannerUrl] = useState<string | null>(null);
+  const [bannerUrls, setBannerUrls] = useState<string[]>([]);
+  const [bannerIndex, setBannerIndex] = useState(0);
 
+  // Typing effect for search placeholder
   useEffect(() => {
-    // ⛔ stop animation when user types
     if (inputValue.length > 0) return;
 
     const currentText = searchTexts[textIndex];
@@ -54,6 +54,7 @@ const HomeHeader = () => {
     return () => clearTimeout(timer);
   }, [charIndex, isDeleting, textIndex, inputValue]);
 
+  // Fetch banners from API
   useEffect(() => {
     let isMounted = true;
 
@@ -61,12 +62,11 @@ const HomeHeader = () => {
       try {
         const banners = await fetchActiveBanners();
         console.log("HomeHeader: active banners fetched:", banners?.length || 0);
-        const url = pickBestBannerUrl(banners[0]);
-        console.log("HomeHeader: selected banner url:", url);
-        if (isMounted) setBannerUrl(url);
+        const urls = banners.map((banner) => pickBestBannerUrl(banner)).filter(Boolean) as string[];
+        if (isMounted) setBannerUrls(urls);
       } catch {
-        console.log("HomeHeader: failed to fetch banners, using fallback");
-        if (isMounted) setBannerUrl(null);
+        console.log("HomeHeader: failed to fetch banners");
+        if (isMounted) setBannerUrls([]);
       }
     })();
 
@@ -75,16 +75,25 @@ const HomeHeader = () => {
     };
   }, []);
 
+  // Auto-scroll banners
+  useEffect(() => {
+    if (bannerUrls.length === 0) return;
+
+    const interval = setInterval(() => {
+      setBannerIndex((prev) => (prev + 1) % bannerUrls.length);
+    }, 3000); // change banner every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [bannerUrls]);
+
   return (
     <>
-      {bannerUrl ? (
+      {bannerUrls.length > 0 && (
         <Image
-          source={{
-            uri: bannerUrl,
-          }}
+          source={{ uri: bannerUrls[bannerIndex] }}
           style={styles.banner}
         />
-      ) : null}
+      )}
 
       <View style={styles.searchContainer}>
         <TextInput
@@ -124,6 +133,3 @@ const styles = StyleSheet.create({
     color: "#000",
   },
 });
-
-
-// qhgsvaHS

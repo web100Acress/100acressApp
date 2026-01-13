@@ -1,172 +1,99 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  ScrollView,
-  Pressable,
-  Alert,
-} from "react-native";
-import { Linking } from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, StyleSheet, Alert, Linking, ScrollView, Button } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState, AppDispatch } from "../../../Redux/trending/store";
+import { fetchTrendingProjects } from "../../../Redux/trending/trendingSlice";
 
-import { fetchTrendingProjects } from "../../../api/Services/trendingService";
-import type { TrendingProject } from "../../../api/types";
+const TrendingProjects: React.FC = () => {
+  const dispatch: AppDispatch = useDispatch();
 
-const handleCall = () => {
-  const phoneNumber = "tel:+91 8500900100";
-  Linking.openURL(phoneNumber).catch(() => {
-    Alert.alert("Error", "Unable to open dialer");
-  });
-};
+  const { projects, loading, error } = useSelector(
+    (state: RootState) => state.trending
+  );
 
-const TrendingProjects = () => {
-  const [projects, setProjects] = useState<TrendingProject[]>([]);
-  const [loading, setLoading] = useState(true);
-
+  // Fetch trending projects on mount
   useEffect(() => {
-    let mounted = true;
+    console.log("⚡ TrendingProjects mounted → dispatching fetchTrendingProjects");
+    dispatch(fetchTrendingProjects());
+  }, [dispatch]);
 
-    (async () => {
-      try {
-        const data = await fetchTrendingProjects();
-        if (mounted) setProjects(data);
-      } catch (e) {
-        console.log("Failed to load trending projects");
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    })();
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  const handleCall = () => {
+    const phoneNumber = "tel:+918500900100";
+    Linking.openURL(phoneNumber).catch(() => {
+      Alert.alert("Error", "Unable to open dialer");
+    });
+  };
 
   if (loading) {
     return (
-      <View style={{ padding: 16 }}>
+      <View style={styles.centered}>
         <Text>Loading trending projects...</Text>
       </View>
     );
   }
 
+  if (error) {
+    console.error("❌ TrendingProjects error:", error);
+    return (
+      <View style={styles.centered}>
+        <Text>Failed to load trending projects.</Text>
+      </View>
+    );
+  }
+
   return (
-    <View>
-      <Text style={styles.sectionTitle}>Trending Projects</Text>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingVertical: 16 }}>
+      <Text style={styles.heading}>Recommended Projects</Text>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.row}
-      >
-        {projects.map((item) => (
-          <Pressable key={item._id} style={styles.card}>
-            <Image source={{ uri: item.image as string }} style={styles.image} />
+      {projects.length === 0 && (
+        <Text style={{ textAlign: "center", marginTop: 16 }}>
+          No trending projects available.
+        </Text>
+      )}
 
-            <View style={styles.details}>
-              <Text style={styles.title}>{item.title}</Text>
-              <Text style={styles.price}>{item.price}</Text>
-              <Text style={styles.location}>{item.location}</Text>
-            </View>
-
-            <View style={styles.actions}>
-              <Pressable
-                style={styles.exploreBtn}
-                onPress={() =>
-                  Linking.openURL(
-                    `https://www.100acress.com/${item.slug}`
-                  )
-                }
-              >
-                <Text style={styles.exploreText}>Explore</Text>
-              </Pressable>
-
-              <Pressable onPress={handleCall} style={styles.iconBtn}>
-                <Text>📞</Text>
-              </Pressable>
-
-              <Pressable style={styles.iconBtn}>
-                <Text>💬</Text>
-              </Pressable>
-            </View>
-          </Pressable>
-        ))}
-      </ScrollView>
-    </View>
+      {projects.map((project) => (
+        <View key={project.id} style={styles.projectCard}>
+          <Text style={styles.projectTitle}>{project.name}</Text>
+          <Text>{project.location}</Text>
+          <Text>{project.price}</Text>
+          <Button title="View number" onPress={handleCall} />
+        </View>
+      ))}
+    </ScrollView>
   );
 };
 
 export default TrendingProjects;
 
 const styles = StyleSheet.create({
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: "700",
-    marginHorizontal: 16,
-    marginTop: 24,
-  },
-  row: {
-    paddingHorizontal: 16,
-    marginTop: 16,
-  },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 14,
-    marginRight: 16,
-    paddingBottom: 12,
-    width: 280,
-  },
-  image: {
-    width: "100%",
-    height: 160,
-    borderTopLeftRadius: 14,
-    borderTopRightRadius: 14,
-  },
-  details: {
-    padding: 12,
-  },
-  title: {
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  price: {
-    color: "#E11D48",
-    fontWeight: "600",
-    marginTop: 4,
-  },
-  location: {
-    fontSize: 12,
-    color: "#6B7280",
-    marginTop: 4,
-  },
-  actions: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 12,
-    marginTop: 8,
-  },
-  exploreBtn: {
+  container: {
     flex: 1,
-    backgroundColor: "#EF4444",
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: "center",
-    marginRight: 8,
+    paddingHorizontal: 16,
   },
-  exploreText: {
-    color: "#fff",
-    fontWeight: "600",
-  },
-  iconBtn: {
-    width: 48,
-    height: 36,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#E5E7EB",
-    alignItems: "center",
+  centered: {
+    flex: 1,
     justifyContent: "center",
-    marginLeft: 6,
-    backgroundColor: "#ffe5e5ff",
+    alignItems: "center",
+  },
+  heading: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 16,
+  },
+  projectCard: {
+    backgroundColor: "#fff",
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2, // Android shadow
+  },
+  projectTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 4,
   },
 });

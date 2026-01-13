@@ -99,4 +99,8 @@ const styles = StyleSheet.create({
 });
 
 
-// ritika mitika
+
+
+// Aaman pagal
+
+

@@ -2,15 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { apiRequest } from "../../api/apiClient";
 import type { TrendingProject, TrendingProjectsResponse } from "../../api/types";
 
-/**
- * 👉 Ye thunk hi actual API call karta hai
- * Component direct API ko kabhi call nahi karega
- */
 export const fetchTrendingProjects = createAsyncThunk<
   TrendingProject[],
   void,
   { rejectValue: string }
->("trending/fetchTrendingProjects", async (_, { rejectWithValue }) => {
+>("Trending/fetchTrendingProjects", async (_, { rejectWithValue }) => {
   try {
     console.log("🚀 REDUX: Calling Trending");
 
@@ -38,7 +34,7 @@ const initialState: TrendingState = {
 };
 
 const trendingSlice = createSlice({
-  name: "rending",
+  name: "Trending",
   initialState,
   reducers: {},
   extraReducers: (builder) => {

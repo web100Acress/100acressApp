@@ -1,66 +1,76 @@
-import React from 'react';
-import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { Linking } from "react-native";
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
+import { Linking } from 'react-native';
+import { getRecommendedProjects } from '../../../api/Services/recommendedApi';
 
-
-const RecommendedProjectsImg = [
-    { 
-        icon:"https://100acress-media-bucket.s3.ap-south-1.amazonaws.com/thumbnails/1763702902013-thumb.webp",
-        label:"Smartworld GIC",
-        location: "Sector M9, Manesar",
-        url:"https://www.100acress.com/smart-world-gic/"
-        
-    },
-    { 
-        icon:"https://100acress-media-bucket.s3.ap-south-1.amazonaws.com/thumbnails/1760767763798-banner.webp",
-        label:"Signature Sarvam at DXP Estate",
-        location: "Sector 37D, Dwarka Expressway",
-        url:"https://www.100acress.com/signature-global-dxp-estate-37D/"
-    },
-    { 
-        icon:"https://100acress-media-bucket.s3.ap-south-1.amazonaws.com/thumbnails/1761736939709-banner.webp",
-        label:"M3M Elie Saab at SCDA",
-        location: "Sector 111, Dwarka Expressway",
-        url:"https://www.100acress.com/m3m-eliesaab-residences/"
-    },
-    { 
-        icon:"https://100acress-media-bucket.s3.ap-south-1.amazonaws.com/thumbnails/1759123018502-thumb.webp",
-        label:"SBPTP DownTown 66",
-        location: "Sector 66, Golf Course Extn Road",
-        url:"https://www.100acress.com/bptp-downtown-66/"
-    },
-
-]
+interface RecommendedProject {
+  icon: string;
+  label: string;
+  location: string;
+  url: string;
+}
 
 const RecommendedProjects = () => {
+  const [projects, setProjects] = useState<RecommendedProject[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadProjects = async () => {
+      try {
+        const data = await getRecommendedProjects();
+        setProjects(data);
+      } catch (error) {
+        console.log('API error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProjects();
+  }, []);
+
+  if (loading) {
+    return <Text style={{ padding: 16 }}>Loading...</Text>;
+  }
+
   return (
     <View style={styles.container}>
-    <Text style={styles.title}>Recommended Projects</Text>
-    <Text style={styles.subtitle}>Discover premium properties handpicked for luxury living and exceptional investment returns</Text>
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {RecommendedProjectsImg.map((item, index) => (
+      <Text style={styles.title}>Recommended Projects</Text>
+      <Text style={styles.subtitle}>
+        Discover premium properties handpicked for luxury living and exceptional investment returns
+      </Text>
+
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {projects.map((item, index) => (
           <TouchableOpacity
             key={index}
             onPress={() => Linking.openURL(item.url)}
-            >
+          >
             <View style={{ marginRight: 16, marginTop: 12 }}>
-                <Image source={{ uri: item.icon }} style={styles.image} />
-                <Text style={{ fontWeight: "600", marginTop: 8 }}>
+              <Image source={{ uri: item.icon }} style={styles.image} />
+              <Text style={{ fontWeight: '600', marginTop: 8 }}>
                 {item.label}
-                </Text>
-                <Text style={{ color: "#6B7280", marginTop: 4 }}>
+              </Text>
+              <Text style={{ color: '#6B7280', marginTop: 4 }}>
                 {item.location}
-                </Text>
+              </Text>
             </View>
-            </TouchableOpacity>
+          </TouchableOpacity>
         ))}
-    </ScrollView>
+      </ScrollView>
     </View>
-
-  )
-}
+  );
+};
 
 export default RecommendedProjects;
+
 
 const styles = StyleSheet.create({
     container:{

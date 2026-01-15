@@ -6,6 +6,7 @@ import PopularTools from "../Properties/PopularTools";
 import RecommendedProjects from "../Properties/RecommendedProjects";
 import TrendingProjects from "../Properties/TrendingProjects";
 import NewLaunchSection from "../Properties/NewLaunchSection";
+import TopLuxury from "../Properties/TopLuxury";
 
 const HomeScreen = () => {
   return (
@@ -16,8 +17,8 @@ const HomeScreen = () => {
         <RecommendedProjects />
         <TrendingProjects />
         <NewLaunchSection />
+        <TopLuxury />
         <PopularTools />
-
       </ScrollView>
     </View>
   );

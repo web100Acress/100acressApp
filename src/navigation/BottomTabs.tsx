@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Text, Linking, Alert, Pressable } from "react-native";
 
 import HomeScreen from "../component/screens/homeScreen/HomeScreen";
-import ProfileScreen from "../component/profile/LogOutProfilePage";
+import ProfileScreen from "../component/Dashboard/LogOutProfilePage";
 import OurActivity from "../component/ourActivity/OurActivity";
 import YoutubeVideo from "../component/videos/YoutubeVideo";
 import { Image } from "react-native";

@@ -36,50 +36,14 @@ const LoginScreen = ({ navigation }: any) => {
 
   const isValid = email.includes("@") && password.length >= 4;
 
-  // const handleLogin = async () => {
-  //   if (!email || !password) {
-  //     Alert.alert("Error", "Email & password required");
-  //     return;
-  //   }
-
-  //   try {
-  //     setLoading(true);
-
-  //     // API call
-  //     const res: any = await loginWithEmail({
-  //       email: email.trim(),
-  //       password: password.trim(),
-  //     });
-
-  //     console.log("LOGIN RESPONSE:", res);
-
-  //     const token =
-  //       res?.accessToken ||
-  //       res?.token ||
-  //       res?.data?.token;
-
-  //     const user = res?.data?.user || res?.user; // adjust according to your API
-
-  //     if (!token) {
-  //       Alert.alert("Login Failed", "Access token not received");
-  //       return;
-  //     }
-
-  //     // ✅ Save token & user data
-  //     await AsyncStorage.setItem("ACCESS_TOKEN", token);
-  //     await AsyncStorage.setItem("user", JSON.stringify(user));
-  //     await AsyncStorage.setItem("isLoggedIn", "true");
-
-  //     // Navigate to main app
-  //     navigation.replace("BottomTabs");
-  //   } catch (error: any) {
-  //     console.error("LOGIN ERROR:", error);
-  //     Alert.alert("Login Failed", error.message || "Invalid credentials");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
+  type LoginResponse = {
+  token: string;
+  User: {
+    id: number;
+    name: string;
+    email: string;
+  };
+};
 
 const handleLogin = async () => {
   if (!email || !password) {
@@ -93,7 +57,7 @@ const handleLogin = async () => {
     const res = await loginWithEmail({
       email: email.trim(),
       password: password.trim(),
-    });
+    }) as LoginResponse;
 
     const token = res?.token;
     const user = res?.User;
@@ -106,6 +70,7 @@ const handleLogin = async () => {
     // 1. Storage mein save karein
     await Promise.all([
       AsyncStorage.setItem("ACCESS_TOKEN", token),
+      console.log(`Access token is this = ${token}`),
       AsyncStorage.setItem("IS_LOGGED_IN", "true"),
       user ? AsyncStorage.setItem("USER_DATA", JSON.stringify(user)) : Promise.resolve(),
     ]);
@@ -113,7 +78,7 @@ const handleLogin = async () => {
     // 2. Direct Navigation (Bina Alert ke)
     navigation.replace("BottomTabs");
 
-  } catch (error) {
+  } catch (error: any) {
     Alert.alert("Login Failed", error.message || "Something went wrong");
   } finally {
     setLoading(false);

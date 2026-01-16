@@ -1,6 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LoginScreen from '../component/Dashboard/LoginScreen';
+import LoginScreen from '../dashBoard/LoginScreen';
 import BottomTabs from './BottomTabs';
 import Buying from '../component/screens/Properties/Buying';
 import Rent from '../component/screens/Properties/Rent';

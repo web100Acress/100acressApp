@@ -1,12 +1,23 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import RealEstate from './activity/RealEstate'
+import Why100Acress from './activity/Why100Acress'
 
 const OurActivity = () => {
   return (
-    <View>
-        <Text> hello here </Text>
+    <View style={styles.container}>
+      <ScrollView>
+        <RealEstate/>
+        <Why100Acress /> 
+      </ScrollView>
     </View>
   )
 }
 
 export default OurActivity
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#fedbdb'
+  }
+})

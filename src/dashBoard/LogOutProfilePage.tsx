@@ -19,7 +19,7 @@ import LinearGradient from "react-native-linear-gradient";
 import { loginWithEmail } from "../api/authService";
 
 const { width } = Dimensions.get("window");
-
+console.log("here somthing happend!")
 const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -64,6 +64,7 @@ const LoginScreen = ({ navigation }: any) => {
       }
 
       await AsyncStorage.setItem("ACCESS_TOKEN", token);
+      console.log(`this is you token ${token}`),
       await AsyncStorage.setItem("IS_LOGGED_IN", "true");
 
       if (user) {

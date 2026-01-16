@@ -116,7 +116,7 @@ const TrendingProjectsCarousel: React.FC = () => {
                 )}
                 {project.whatsapp && (
                   <TouchableOpacity
-                    style={[styles.button, { backgroundColor: "#25D366" }]}
+                    style={[styles.button, { backgroundColor: "#b2fcce" }]}
                     onPress={() => handleWhatsApp(project.whatsapp!)}
                   >
                     <Text style={styles.buttonText}>💬</Text>

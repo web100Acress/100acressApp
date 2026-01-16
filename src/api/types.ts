@@ -21,3 +21,5 @@ export type ActiveBannersResponse = {
   success: boolean;
   banners: Banner[];
 };
+
+

@@ -148,14 +148,14 @@ const handleLogin = async () => {
             </Text>
           </TouchableOpacity>
 
-          <Text style={styles.orText}>OR</Text>
+          {/* <Text style={styles.orText}>OR</Text> */}
 
           {/* Do it later */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => navigation.replace("BottomTabs")}
           >
             <Text style={styles.skipText}>Do it later</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
 
-  buttonActive: { backgroundColor: "#1D4ED8" },
+  buttonActive: { backgroundColor: "#d8451d" },
   buttonDisabled: { backgroundColor: "#9CA3AF" },
 
   buttonText: {

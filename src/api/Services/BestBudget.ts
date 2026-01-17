@@ -1,27 +1,21 @@
 import { apiRequest } from "../apiClient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export type LuxuryProject = {
+export type BestBudgetProject = {
   icon: string;
   label: string;
   location: string;
   url: string;
 };
 
-export const getLuxuryProjects = async (): Promise<LuxuryProject[]> => {
+export const getBestBudgetProject = async (): Promise<BestBudgetProject[]> => {
   const token = await AsyncStorage.getItem("ACCESS_TOKEN");
 
-  const res = await apiRequest<any>("project/luxury", {
+  const res = await apiRequest<any>("project/budgethomes", {
     headers: token
       ? { Authorization: `Bearer ${token}` }
-      : {}, // 👈 guest user support
-
+      : {},
   });
-console.log("📊 Number of projects returned:", res?.data?.length || 0);
-  console.log("✅ Luxury RAW =>", res?.data);
-
-  // console.log("📊 Number of projects returned:", res?.data?.length || 0);
-
 
   return (res?.data || []).map((item: any) => ({
     icon:

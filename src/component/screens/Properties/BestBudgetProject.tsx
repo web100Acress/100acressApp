@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,74 +10,38 @@ import {
   Alert,
   Dimensions,
 } from "react-native";
+import {
+  getBestBudgetProject,
+  BestBudgetProject,
+} from "../../../api/Services/BestBudget";
 
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = width * 0.72;
 
-type Project = {
-  id: number;
-  title: string;
-  location: string;
-  price: string;
-  image: string;
-  url: string;
-  whatsapp?: string;
-};
-
-const BestBudgetProject: Project[] = [
-  {
-    id: 1,
-    title: "M3M Antalya Hills",
-    location: "Sector 79, Southern Peripheral Road",
-    price: "₹1.68 - 2.46 Cr",
-    image:
-      "https://100acress-media-bucket.s3.ap-south-1.amazonaws.com/thumbnails/1740914828774-100acre/project/axam5uv3telszz9uyaqa",
-    url: "https://www.100acress.com/m3m-antalya-hills/",
-    whatsapp: "+918500900100",
-  },
-  {
-    id: 2,
-    title: "Signature Global City 81",
-    location: "Sector 81, Dwarka Expressway",
-    price: "₹1.65 - 1.83 Cr",
-    image:
-      "https://100acress-media-bucket.s3.ap-south-1.amazonaws.com/thumbnails/1740914839138-100acre/project/aglu41yl0ikr7eekxubi",
-    url: "https://www.100acress.com/signature-global-city-81/",
-    whatsapp: "+918500900101",
-  },
-  {
-    id: 3,
-    title: "M3M Soulitude",
-    location: "Sector 89, New Gurgaon",
-    price: "₹1.44 - 1.8 Cr",
-    image:
-      "https://100acress-media-bucket.s3.ap-south-1.amazonaws.com/thumbnails/1740914839138-100acre/project/aglu41yl0ikr7eekxubi",
-    url: "https://www.100acress.com/m3m-soulitude/",
-    whatsapp: "+918500900102",
-  },
-  {
-    id: 4,
-    title: "ROF Pravasa",
-    location: "Sector 88A, Dwarka Expressway",
-    price: "₹2.4 - 2.6 Cr",
-    image:
-      "https://100acress-media-bucket.s3.ap-south-1.amazonaws.com/thumbnails/1740914839138-100acre/project/aglu41yl0ikr7eekxubi",
-    url: "https://www.100acress.com/rof-pravasa/",
-    whatsapp: "+918500900103",
-  },
-];
-
 const BestBudgetCarousel: React.FC = () => {
+  const [projects, setProjects] = useState<BestBudgetProject[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadProjects();
+  }, []);
+
+  const loadProjects = async () => {
+    try {
+      setLoading(true);
+      const data = await getBestBudgetProject();
+      setProjects(data);
+    } catch (error) {
+      console.log("❌ Budget API Error:", error);
+      Alert.alert("Error", "Unable to fetch projects");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const openURL = (url: string) => {
     Linking.openURL(url).catch(() =>
       Alert.alert("Error", "Unable to open link")
-    );
-  };
-
-  const openWhatsApp = (number: string) => {
-    const url = `https://wa.me/${number.replace(/[^0-9]/g, "")}`;
-    Linking.openURL(url).catch(() =>
-      Alert.alert("Error", "WhatsApp not available")
     );
   };
 
@@ -85,57 +49,60 @@ const BestBudgetCarousel: React.FC = () => {
     <View style={styles.wrapper}>
       <Text style={styles.heading}>Best Budget Projects in Gurgaon</Text>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContainer}
-        snapToInterval={CARD_WIDTH + 16}
-        decelerationRate="fast"
-      >
-        {BestBudgetProject.map((project) => (
-          <View key={project.id} style={styles.card}>
-            {/* Image */}
-            <View style={styles.imageWrapper}>
-              <Image source={{ uri: project.image }} style={styles.image} />
+      {loading ? (
+        <Text style={{ marginLeft: 16 }}>Loading projects...</Text>
+      ) : (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContainer}
+          snapToInterval={CARD_WIDTH + 16}
+          decelerationRate="fast"
+        >
+          {projects.length > 0 ? (
+            projects.map((project, index) => (
+              <View key={index} style={styles.card}>
+                {/* Image */}
+                <View style={styles.imageWrapper}>
+                  <Image
+                    source={{
+                      uri:
+                        project.icon ||
+                        "https://via.placeholder.com/400x300?text=No+Image",
+                    }}
+                    style={styles.image}
+                  />
+                </View>
 
-              {/* Price Badge */}
-              <View style={styles.priceBadge}>
-                <Text style={styles.priceText}>{project.price}</Text>
+                {/* Content */}
+                <View style={styles.content}>
+                  <Text style={styles.title} numberOfLines={1}>
+                    {project.label}
+                  </Text>
+
+                  <Text style={styles.location} numberOfLines={2}>
+                    📍 {project.location}
+                  </Text>
+
+                  {/* Buttons */}
+                  <View style={styles.buttonRow}>
+                    <TouchableOpacity
+                      style={styles.exploreBtn}
+                      onPress={() => openURL(project.url)}
+                    >
+                      <Text style={styles.exploreText}>Explore</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
               </View>
-            </View>
-
-            {/* Content */}
-            <View style={styles.content}>
-              <Text style={styles.title} numberOfLines={1}>
-                {project.title}
-              </Text>
-
-              <Text style={styles.location} numberOfLines={2}>
-                📍 {project.location}
-              </Text>
-
-              {/* Buttons */}
-              <View style={styles.buttonRow}>
-                <TouchableOpacity
-                  style={styles.exploreBtn}
-                  onPress={() => openURL(project.url)}
-                >
-                  <Text style={styles.exploreText}>Explore</Text>
-                </TouchableOpacity>
-
-                {project.whatsapp && (
-                  <TouchableOpacity
-                    style={styles.whatsappBtn}
-                    onPress={() => openWhatsApp(project.whatsapp!)}
-                  >
-                    <Text style={styles.whatsappText}>💬</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-            </View>
-          </View>
-        ))}
-      </ScrollView>
+            ))
+          ) : (
+            <Text style={{ marginLeft: 16, marginTop: 20 }}>
+              No projects found
+            </Text>
+          )}
+        </ScrollView>
+      )}
     </View>
   );
 };

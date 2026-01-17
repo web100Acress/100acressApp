@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,100 +6,87 @@ import {
   Image,
   StyleSheet,
   Dimensions,
+  TouchableOpacity,
+  Linking,
 } from "react-native";
+import { getLuxuryProjects, LuxuryProject } from "../../../api/Services/Luxury";
 
 const { width } = Dimensions.get("window");
 
-type Project = {
-  id: string;
-  title: string;
-  bhk: string;
-  location: string;
-  price: string;
-  image: string;
-  featured: boolean;
-};
+export default function TopLuxuryAPI() {
+  const [projects, setProjects] = useState<LuxuryProject[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    loadLuxury();
+  }, []);
 
-/* -------------------- DATA -------------------- */
-const PROJECTS: Project[]= [
-  {
-    id: "1",
-    title: "Bricks Marvella",
-    bhk: "2, 3, 4 BHK Apartment",
-    location: "Tellapur, Hyderabad",
-    price: "₹ 1.33 - 2.65 Cr",
-    image:
-      "https://images.pexels.com/photos/323705/pexels-photo-323705.jpeg",
-    featured: true,
-  },
-  {
-    id: "2",
-    title: "Skyline Heights",
-    bhk: "2, 3 BHK Apartment",
-    location: "Gachibowli, Hyderabad",
-    price: "₹ 98 L - 1.8 Cr",
-    image:
-      "https://images.pexels.com/photos/439391/pexels-photo-439391.jpeg",
-    featured: true,
-  },
-  {
-    id: "3",
-    title: "Bricks Marvella",
-    bhk: "2, 3, 4 BHK Apartment",
-    location: "Tellapur, Hyderabad",
-    price: "₹ 1.33 - 2.65 Cr",
-    image:
-      "https://images.pexels.com/photos/323705/pexels-photo-323705.jpeg",
-    featured: true,
-  },
-];
+  const loadLuxury = async () => {
+    try {
+      setLoading(true);
+      const data = await getLuxuryProjects();
+      console.log("✅ Final Mapped Projects =>", data);
+      setProjects(data);
+    } catch (error) {
+      console.log("❌ Luxury API error 👉", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-/* -------------------- MAIN -------------------- */
-export default function TopLuxury() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Top Luxury Apartments </Text>
-    
-      <FlatList
-      data={PROJECTS}
-      horizontal
-      keyExtractor={(_, index) => index.toString()}
-      renderItem={({ item }) => <ProjectCard item={item} />}
-      />
-    </View>
-  );
-}
-
-/* -------------------- CARD -------------------- */
-const ProjectCard = ({ item }) => {
-  return (
-    <View style={styles.card}>
+  const ProjectCard = ({ item }: { item: LuxuryProject }) => (
+    <TouchableOpacity
+      style={styles.card}
+      activeOpacity={0.8}
+      onPress={() => item.url && Linking.openURL(item.url)}
+    >
       {/* TOP IMAGE */}
-      <Image source={{ uri: item.image }} style={styles.image} />
+      {item.icon ? (
+        <Image source={{ uri: item.icon }} style={styles.image} />
+      ) : null}
 
-      {/* FEATURED */}
-      {item.featured && (
-        <View style={styles.featuredTag}>
-          <Text style={styles.featuredText}>Featured</Text>
-        </View>
-      )}
+      {/* FEATURED TAG */}
+      <View style={styles.featuredTag}>
+        <Text style={styles.featuredText}>Featured</Text>
+      </View>
 
       {/* INFO CARD */}
       <View style={styles.infoWrapper}>
         {/* CIRCULAR IMAGE */}
         <View style={styles.circleWrapper}>
-          <Image source={{ uri: item.image }} style={styles.circleImage} />
+          {item.icon && <Image source={{ uri: item.icon }} style={styles.circleImage} />}
         </View>
 
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.bhk}>{item.bhk}</Text>
+        <Text style={styles.title}>{item.label}</Text>
         <Text style={styles.location}>{item.location}</Text>
-        <Text style={styles.price}>{item.price}</Text>
       </View>
+    </TouchableOpacity>
+  );
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.heading}>Top Luxury Apartments</Text>
+
+      {loading && <Text>Loading luxury projects...</Text>}
+
+      <FlatList
+        data={projects}
+        horizontal
+        keyExtractor={(_, index) => index.toString()}
+        renderItem={({ item }) => <ProjectCard item={item} />}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 40 }}
+        ListEmptyComponent={
+          !loading ? (
+            <Text style={{ textAlign: "center", marginTop: 40 }}>
+              No luxury projects found
+            </Text>
+          ) : null
+        }
+      />
     </View>
   );
-};
+}
 
 /* -------------------- STYLES -------------------- */
 const styles = StyleSheet.create({
@@ -117,7 +104,7 @@ const styles = StyleSheet.create({
     width: width * 0.75,
     height: 420,
     borderRadius: 24,
-    backgroundColor: "#fff",
+    backgroundColor: "#ffe5e5ff",
     marginRight: 16,
     overflow: "hidden",
     elevation: 8,
@@ -135,7 +122,6 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 20,
   },
-
   featuredText: {
     color: "#fff",
     fontSize: 12,
@@ -146,7 +132,7 @@ const styles = StyleSheet.create({
     bottom: 14,
     left: 14,
     right: 14,
-    backgroundColor: "#ffe5e5ff",
+    backgroundColor: "#fff",
     borderRadius: 20,
     paddingTop: 40,
     paddingBottom: 16,
@@ -179,20 +165,9 @@ const styles = StyleSheet.create({
     marginTop: 8,
     textAlign: "center",
   },
-  bhk: {
-    fontSize: 13,
-    color: "#7d8da6",
-    marginTop: 4,
-  },
   location: {
     fontSize: 13,
     color: "#7d8da6",
     marginTop: 2,
-  },
-  price: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#1f2c3d",
-    marginTop: 10,
   },
 });

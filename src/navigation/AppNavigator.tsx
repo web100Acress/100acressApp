@@ -7,6 +7,7 @@ import Rent from '../component/screens/Properties/Rent';
 import Insights from '../component/screens/Properties/Insights';
 import EmiCalculator from '../component/screens/BudgetScreen/EmiCalculator';
 import BudgetCalculator from '../component/screens/BudgetScreen/BudgetCalculator';
+import CreateNewAcc from '../dashBoard/CreateNewAcc'
 
 export type RootStackParamList = {
   Login: undefined;
@@ -15,7 +16,8 @@ export type RootStackParamList = {
   Rent: undefined;
   Insights: undefined;
   EmiCalculator: undefined;
-  BudgetCalculator: undefined
+  BudgetCalculator: undefined;
+  CreateNewAcc: undefined
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -83,6 +85,11 @@ const AppNavigator = () => {
         headerStyle: { backgroundColor: "#cf4040" },
         headerTintColor: "#fff",
       }}/>
+
+      <Stack.Screen
+        name="CreateNewAcc"
+        component={CreateNewAcc}
+      />
 
     </Stack.Navigator>
   );

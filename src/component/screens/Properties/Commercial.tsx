@@ -8,13 +8,16 @@ import {
   Linking,
   Dimensions,
 } from "react-native";
-import { getNewLaunchProject ,NewLaunchProject } from "../../api/Services/NewLaunch";
+import {
+  getCommercialProject,
+  commercialProject,
+} from "../../../api/Services/Commercial";
 
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = width * 0.75;
 
-const YoutubeVideo = () => {
-  const [projects, setProjects] = useState<NewLaunchProject[]>([]);
+const Commercial = () => {
+  const [projects, setProjects] = useState<commercialProject[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,7 +27,7 @@ const YoutubeVideo = () => {
   const loadLuxury = async () => {
     try {
       setLoading(true);
-      const data = await getNewLaunchProject();
+      const data = await getCommercialProject();
       setProjects(data);
     } catch (error) {
       console.log("❌ Luxury API error 👉", error);
@@ -38,18 +41,9 @@ const YoutubeVideo = () => {
       {/* Section Heading */}
       <View style={{ paddingHorizontal: 16, marginBottom: 14 }}>
         <Text style={{ fontSize: 20, fontWeight: "800", color: "#111" }}>
-          New Launch
-        </Text>
-        <Text style={{ color: "#777", marginTop: 2 }}>
-          Handpicked premium commercial spaces
+          Commercial Projects in Delhi NCR
         </Text>
       </View>
-
-      {loading && (
-        <Text style={{ paddingHorizontal: 16 }}>
-          Loading luxury projects...
-        </Text>
-      )}
 
       <FlatList
         data={projects}
@@ -128,4 +122,4 @@ const YoutubeVideo = () => {
   );
 };
 
-export default YoutubeVideo;
+export default Commercial;

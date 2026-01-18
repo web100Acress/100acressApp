@@ -9,6 +9,8 @@ import NewLaunchSection from "../Properties/NewLaunchSection";
 import TopLuxury from "../Properties/TopLuxury";
 import BestBudgetProject from "../Properties/BestBudgetProject"
 import SeoProject from "../Properties/SeoProject";
+import DreamPropertiesInGurgaon from "../Properties/DreamPropertiesInGurgaon";
+import Commercial from "../Properties/Commercial";
 
 const HomeScreen = () => {
   return (
@@ -22,6 +24,8 @@ const HomeScreen = () => {
         <TopLuxury />
         <BestBudgetProject />
         <SeoProject /> 
+        <DreamPropertiesInGurgaon /> 
+        <Commercial />
         <PopularTools />
       </ScrollView>
     </View>

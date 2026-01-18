@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,45 +7,33 @@ import {
   StyleSheet,
   ScrollView,
   Pressable,
-} from 'react-native';
-
-const PROJECT_DATA = [
-  {
-    tag: '★ New launch ★',
-    image:
-      'https://100acress-media-bucket.s3.ap-south-1.amazonaws.com/thumbnails/1759123018502-thumb.webp',
-    name: 'SB Urban Park',
-    location: 'Manyata Tech Park, Thanisandra',
-    price: '₹1.97 - 3.7 Cr',
-    type: '3, 4 BHK Apartments',
-    growth: '↑ 31.5% (1Y) in Manyata Tech',
-    buttonText: 'View number',
-  },
-  {
-    tag: '★ New launch ★',
-    image:
-      'https://100acress-media-bucket.s3.ap-south-1.amazonaws.com/thumbnails/1759123018502-thumb.webp',
-    name: 'SB Urban Park',
-    location: 'Manyata Tech Park, Thanisandra',
-    price: '₹1.97 - 3.7 Cr',
-    type: '3, 4 BHK Apartments',
-    growth: '↑ 31.5% (1Y) in Manyata Tech',
-    buttonText: 'View number',
-  },
-  {
-    tag: '★ New launch ★',
-    image:
-      'https://100acress-media-bucket.s3.ap-south-1.amazonaws.com/thumbnails/1759123018502-thumb.webp',
-    name: 'SB Urban Park',
-    location: 'Manyata Tech Park, Thanisandra',
-    price: '₹1.97 - 3.7 Cr',
-    type: '3, 4 BHK Apartments',
-    growth: '↑ 31.5% (1Y) in Manyata Tech',
-    buttonText: 'View number',
-  },
-];
+} from "react-native";
+import {
+  getNewLaunchProject,
+  NewLaunchProject,
+} from "../../../api/Services/NewLaunch"
+import { Linking } from "react-native";
 
 const NewLaunchSection = () => {
+  const [projects, setProjects] = useState<NewLaunchProject[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadNewLaunch();
+  }, []);
+
+  const loadNewLaunch = async () => {
+    try {
+      setLoading(true);
+      const data = await getNewLaunchProject();
+      setProjects(data);
+    } catch (error) {
+      console.log("❌ New Launch API error 👉", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
@@ -57,39 +45,43 @@ const NewLaunchSection = () => {
         Best prices • Unit of choice • Easy payment plan
       </Text>
 
+      {loading && <Text>Loading new launch projects...</Text>}
+
       {/* Horizontal Scroll */}
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {PROJECT_DATA.map((item, index) => (
+        {projects.map((item, index) => (
           <View key={index} style={styles.card}>
             <View style={styles.newLaunchTag}>
-              <Text style={styles.newLaunchText}>{item.tag}</Text>
+              <Text style={styles.newLaunchText}>★ New launch ★</Text>
             </View>
 
             <View style={styles.row}>
-              <Image source={{ uri: item.image }} style={styles.image} />
+              <Image source={{ uri: item.icon }} style={styles.image} />
 
               <View style={styles.details}>
-                <Text style={styles.projectName}>{item.name}</Text>
+                <Text style={styles.projectName}>{item.label}</Text>
                 <Text style={styles.location}>{item.location}</Text>
-                <Text style={styles.price}>{item.price}</Text>
-                <Text style={styles.type}>{item.type}</Text>
-                <Text style={styles.growth}>{item.growth}</Text>
 
-
+                {/* Static placeholders (API doesn’t give these yet) */}
+                <Text style={styles.price}>Price on request</Text>
+                <Text style={styles.type}>Luxury Apartments</Text>
+                <Text style={styles.growth}>High appreciation potential</Text>
               </View>
             </View>
-            {/* BUTTON ROW */}
-                <View style={styles.buttonRow}>
-                  <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText}>
-                      {item.buttonText}
-                    </Text>
-                  </TouchableOpacity>
 
-                  <Pressable style={styles.iconBtn}>
-                    <Text style={styles.iconText}>💬</Text>
-                  </Pressable>
-                </View>
+            {/* BUTTON ROW */}
+            <View style={styles.buttonRow}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => item.url && Linking.openURL(item.url)}
+              >
+                <Text style={styles.buttonText}>View Project</Text>
+              </TouchableOpacity>
+
+              <Pressable style={styles.iconBtn}>
+                <Text style={styles.iconText}>💬</Text>
+              </Pressable>
+            </View>
           </View>
         ))}
       </ScrollView>
@@ -98,6 +90,7 @@ const NewLaunchSection = () => {
 };
 
 export default NewLaunchSection;
+
 
 const styles = StyleSheet.create({
   container: {
@@ -144,7 +137,7 @@ const styles = StyleSheet.create({
   image: {
     width: 90,
     height: 90,
-    borderRadius: 45,
+    borderRadius: 20,
     marginRight: 10,
   },
   details: {
@@ -182,7 +175,7 @@ const styles = StyleSheet.create({
 
   button: {
     flex: 1,
-    backgroundColor: '#007AFF',
+    backgroundColor: '#d42929',
     borderRadius: 8,
     paddingVertical: 10,
     alignItems: 'center',
@@ -197,7 +190,7 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 8,
-    backgroundColor: '#E8F0FE',
+    backgroundColor: '#fee8e8',
     justifyContent: 'center',
     alignItems: 'center',
   },

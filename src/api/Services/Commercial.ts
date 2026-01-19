@@ -14,13 +14,9 @@ export const getCommercialProject = async (): Promise<commercialProject[]> => {
   const res = await apiRequest<any>("project/commercial", {
     headers: token
       ? { Authorization: `Bearer ${token}` }
-      : {}, // 👈 guest user support
+      : {}, 
 
   });
-
-  console.log("📊 Number of projects returned:", res?.data?.length || 0);
-  console.log("✅ Commercial RAW =>", res?.data);
-
   return (res?.data || []).map((item: any) => ({
     icon:
       item.thumbnailImage?.cdn_url ||

@@ -14,11 +14,8 @@ export const getScoplotProjects = async (): Promise<ScoplotProject[]> => {
   const res = await apiRequest<any>("project/scoplots", {
     headers: token
       ? { Authorization: `Bearer ${token}` }
-      : {}, // 👈 guest user support
+      : {}, 
   });
-
-  // console.log("📊 Number of scoplots returned:", res?.data?.length || 0);
-  // console.log("✅ Scoplot RAW =>", res?.data);
 
   return (res?.data || []).map((item: any) => ({
     icon:

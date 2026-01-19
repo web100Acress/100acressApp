@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Linking,
+  StyleSheet,
   Dimensions,
 } from "react-native";
 import {
@@ -21,26 +22,32 @@ const Commercial = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadLuxury();
+    loadCommercial();
   }, []);
 
-  const loadLuxury = async () => {
+  const loadCommercial = async () => {
     try {
       setLoading(true);
       const data = await getCommercialProject();
       setProjects(data);
     } catch (error) {
-      console.log("❌ Luxury API error 👉", error);
+      console.log("❌ Commercial API error 👉", error);
     } finally {
       setLoading(false);
     }
   };
 
+  const openURL = (url: string) => {
+    Linking.openURL(url).catch(() =>
+      console.log("❌ Unable to open URL")
+    );
+  };
+
   return (
-    <View style={{ paddingVertical: 20 }}>
+    <View style={styles.container}>
       {/* Section Heading */}
-      <View style={{ paddingHorizontal: 16, marginBottom: 14 }}>
-        <Text style={{ fontSize: 20, fontWeight: "800", color: "#111" }}>
+      <View style={styles.headingWrapper}>
+        <Text style={styles.headingText}>
           Commercial Projects in Delhi NCR
         </Text>
       </View>
@@ -50,72 +57,35 @@ const Commercial = () => {
         horizontal
         keyExtractor={(_, index) => index.toString()}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingHorizontal: 16,
-          paddingBottom: 10,
-        }}
-        ListEmptyComponent={
-          !loading ? (
-            <Text style={{ textAlign: "center", marginTop: 40 }}>
-              No luxury projects found
-            </Text>
-          ) : null
-        }
+        contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            activeOpacity={0.85}
-            onPress={() => item.url && Linking.openURL(item.url)}
-            style={{
-              width: CARD_WIDTH,
-              backgroundColor: "#fff",
-              borderRadius: 18,
-              marginRight: 16,
-              shadowColor: "#000",
-              shadowOpacity: 0.1,
-              shadowRadius: 10,
-              shadowOffset: { width: 0, height: 5 },
-              elevation: 6,
-            }}
-          >
-            {/* Image */}
-            {item.icon ? (
+          <View style={styles.card}>
+            {item.icon && (
               <Image
                 source={{ uri: item.icon }}
-                style={{
-                  height: 170,
-                  width: "100%",
-                  borderTopLeftRadius: 18,
-                  borderTopRightRadius: 18,
-                }}
+                style={styles.cardImage}
                 resizeMode="cover"
               />
-            ) : null}
+            )}
 
-            {/* Content */}
-            <View style={{ padding: 12 }}>
-              <Text
-                numberOfLines={2}
-                style={{
-                  fontSize: 16,
-                  fontWeight: "800",
-                  color: "#111",
-                }}
-              >
+            <View style={styles.cardContent}>
+              <Text numberOfLines={2} style={styles.cardTitle}>
                 {item.label}
               </Text>
 
-              <Text
-                numberOfLines={1}
-                style={{
-                  color: "#666",
-                  marginTop: 6,
-                  fontSize: 13,
-                }}
-              >
+              <Text numberOfLines={1} style={styles.cardLocation}>
                 📍 {item.location}
               </Text>
+
+              <TouchableOpacity
+                onPress={() => item.url && openURL(item.url)}
+                activeOpacity={0.85}
+                style={styles.exploreBtn}
+              >
+                <Text style={styles.exploreText}>Explore</Text>
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
+          </View>
         )}
       />
     </View>
@@ -123,3 +93,75 @@ const Commercial = () => {
 };
 
 export default Commercial;
+
+const styles = StyleSheet.create({
+  container: {
+    paddingVertical: 20,
+  },
+
+  headingWrapper: {
+    paddingHorizontal: 16,
+    marginBottom: 14,
+  },
+
+  headingText: {
+    fontSize: 20,
+    fontWeight: "800",
+    color: "#111",
+  },
+
+  listContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 10,
+  },
+
+  card: {
+    width: CARD_WIDTH,
+    backgroundColor: "#fff",
+    borderRadius: 18,
+    marginRight: 16,
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 5 },
+    elevation: 6,
+  },
+
+  cardImage: {
+    height: 170,
+    width: "100%",
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+  },
+
+  cardContent: {
+    padding: 12,
+  },
+
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: "800",
+    color: "#111",
+  },
+
+  cardLocation: {
+    color: "#666",
+    marginTop: 6,
+    fontSize: 13,
+  },
+
+  exploreBtn: {
+    marginTop: 12,
+    backgroundColor: "#e60023",
+    paddingVertical: 9,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+
+  exploreText: {
+    color: "#fff",
+    fontSize: 13,
+    fontWeight: "700",
+  },
+});

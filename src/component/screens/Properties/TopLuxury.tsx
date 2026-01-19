@@ -58,7 +58,7 @@ export default function TopLuxuryAPI() {
         </View>
 
         <Text style={styles.title}>{item.label}</Text>
-        <Text style={styles.location}>{item.location}</Text>
+        <Text style={styles.location}>📍{item.location}</Text>
       </View>
     </TouchableOpacity>
   );

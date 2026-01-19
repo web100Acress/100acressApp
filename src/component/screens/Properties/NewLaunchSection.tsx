@@ -60,7 +60,7 @@ const NewLaunchSection = () => {
 
               <View style={styles.details}>
                 <Text style={styles.projectName}>{item.label}</Text>
-                <Text style={styles.location}>{item.location}</Text>
+                <Text style={styles.location}>📍{item.location}</Text>
 
                 {/* Static placeholders (API doesn’t give these yet) */}
                 <Text style={styles.price}>Price on request</Text>

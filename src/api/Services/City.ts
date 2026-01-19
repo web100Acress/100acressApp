@@ -1,22 +1,25 @@
 import { apiRequest } from "../apiClient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export type NewLaunchProject = {
+export type CityProject = {
   icon: string;
   label: string;
   location: string;
   url: string;
 };
 
-export const getNewLaunchProject = async (): Promise<NewLaunchProject[]> => {
+export const getCityProjects = async (): Promise<CityProject[]> => {
   const token = await AsyncStorage.getItem("ACCESS_TOKEN");
 
-  const res = await apiRequest<any>("project/upcoming", {
+  const res = await apiRequest<any>("project/city", {
     headers: token
       ? { Authorization: `Bearer ${token}` }
       : {}, 
 
   });
+    // console.log("📊 Number of Feature returned:", res?.data?.length || 0);
+    // console.log("✅ Feature RAW =>", res?.data);
+    // console.log("✅ Feature RAW =>", res?.error);
 
   return (res?.data || []).map((item: any) => ({
     icon:

@@ -97,7 +97,7 @@ const TrendingProjectsCarousel: React.FC = () => {
             <View style={{ padding: 8 }}>
               <Text style={styles.title}>{project.title}</Text>
               <Text style={styles.price}>{project.price}</Text>
-              <Text style={styles.location}>{project.location}</Text>
+              <Text style={styles.location}>📍{project.location}</Text>
 
               <View style={styles.buttonRow}>
                 <TouchableOpacity

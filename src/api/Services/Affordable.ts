@@ -1,22 +1,25 @@
 import { apiRequest } from "../apiClient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export type NewLaunchProject = {
+export type AffordableProject = {
   icon: string;
   label: string;
   location: string;
   url: string;
 };
 
-export const getNewLaunchProject = async (): Promise<NewLaunchProject[]> => {
+export const getAffordableProjects = async (): Promise<AffordableProject[]> => {
   const token = await AsyncStorage.getItem("ACCESS_TOKEN");
 
-  const res = await apiRequest<any>("project/upcoming", {
+  const res = await apiRequest<any>("project/affordable", {
     headers: token
       ? { Authorization: `Bearer ${token}` }
       : {}, 
 
   });
+    // console.log("📊 Number of Feature returned:", res?.data?.length || 0);
+    // console.log("✅ Feature RAW =>", res?.data);
+    // console.log("✅ Feature RAW =>", res?.error);
 
   return (res?.data || []).map((item: any) => ({
     icon:
@@ -29,7 +32,7 @@ export const getNewLaunchProject = async (): Promise<NewLaunchProject[]> => {
 
     location:
       item.projectAddress ||
-      item.city ||
+      item.Affordable ||
       "Location not available",
 
     url: item.project_url

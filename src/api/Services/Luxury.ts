@@ -14,14 +14,9 @@ export const getLuxuryProjects = async (): Promise<LuxuryProject[]> => {
   const res = await apiRequest<any>("project/luxury", {
     headers: token
       ? { Authorization: `Bearer ${token}` }
-      : {}, // 👈 guest user support
+      : {}, 
 
   });
-console.log("📊 Number of projects returned:", res?.data?.length || 0);
-  console.log("✅ Luxury RAW =>", res?.data);
-
-  // console.log("📊 Number of projects returned:", res?.data?.length || 0);
-
 
   return (res?.data || []).map((item: any) => ({
     icon:

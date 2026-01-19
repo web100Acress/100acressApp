@@ -49,7 +49,7 @@ const RecommendedProjects = () => {
                 {item.label}
                 </Text>
                 <Text style={{ color: "#6B7280", marginTop: 4 }}>
-                {item.location}
+                📍{item.location}
                 </Text>
             </View>
             </TouchableOpacity>

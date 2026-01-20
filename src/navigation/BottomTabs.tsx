@@ -94,10 +94,14 @@ const BottomTabs = ({}) => {
         options={{
           tabBarIcon: ({ color }) => (
             <Image
-            source={require("../public/assets/icon/image.png")}
+            source={require("../public/assets/icon/BuildingIcon.png")}
             style={{width: 40, height: 40}}
             />
           ),
+          headerShown: true,
+        title: "Our Activity",
+        headerStyle: { backgroundColor: "#cf4040" },
+        headerTintColor: "#fff",
         }}
       />
 
@@ -107,8 +111,8 @@ const BottomTabs = ({}) => {
         options={{
           tabBarIcon: ({ color }) => (
             <Image
-            source={{uri: "https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA0L3BmLWljb240LWppcjIwNjQtcG9yLWwtam9iNzg4LnBuZw.png"}}
-            style={{width: 26, height: 26}}/>
+            source={{uri: "../public/assets/icon/hip.png"}}
+            style={{width: 56, height: 56}}/>
           ),
         }}
       />

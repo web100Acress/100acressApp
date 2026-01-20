@@ -64,7 +64,7 @@ const NewLaunchSection = () => {
 
                 {/* Static placeholders (API doesn’t give these yet) */}
                 <Text style={styles.price}>Price on request</Text>
-                <Text style={styles.type}>Luxury Apartments</Text>
+                {/* <Text style={styles.type}>Luxury Apartments</Text> */}
                 <Text style={styles.growth}>High appreciation potential</Text>
               </View>
             </View>

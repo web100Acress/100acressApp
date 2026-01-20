@@ -8,6 +8,7 @@ import Insights from '../component/screens/Properties/Insights';
 import EmiCalculator from '../component/screens/BudgetScreen/EmiCalculator';
 import BudgetCalculator from '../component/screens/BudgetScreen/BudgetCalculator';
 import CreateNewAcc from '../dashBoard/CreateNewAcc'
+import OurActivity from '../component/ourActivity/OurActivity';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -18,6 +19,7 @@ export type RootStackParamList = {
   EmiCalculator: undefined;
   BudgetCalculator: undefined;
   CreateNewAcc: undefined
+  OurActivity: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -89,6 +91,17 @@ const AppNavigator = () => {
       <Stack.Screen
         name="CreateNewAcc"
         component={CreateNewAcc}
+      />
+
+      <Stack.Screen
+        name="OurActivity"
+        component={OurActivity}
+        options={{
+        headerShown: true,
+        title: "Home Loan Guide",
+        headerStyle: { backgroundColor: "#cf4040" },
+        headerTintColor: "#fff",
+      }}
       />
 
     </Stack.Navigator>

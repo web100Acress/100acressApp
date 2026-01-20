@@ -1,4 +1,4 @@
-import React, { memo, useState, useRef } from "react";
+import React, { memo, useRef, useState } from "react";
 import {
   View,
   FlatList,
@@ -6,19 +6,21 @@ import {
   StyleSheet,
   ViewToken,
   StatusBar,
+  TouchableWithoutFeedback,
+  Text,
 } from "react-native";
 import { WebView } from "react-native-webview";
 
 const { width, height } = Dimensions.get("window");
-
-// Poori screen cover karne ke liye heights
+// Agar Bottom Tabs hain toh height - 70-80 use karein
 const SCREEN_HEIGHT = height; 
+const SCREEN_WIDTH = width;
 
 const SHORTS = [
   "https://www.youtube.com/shorts/mEdrmKXiEbE",
-  "https://www.youtube.com/shorts/wxZ1jk0nxgu",
-  "https://www.youtube.com/shorts/BVpqd4YPrso",
   "https://www.youtube.com/shorts/hTeR3J0ME6U",
+
+
 ];
 
 const extractYoutubeId = (url: string) => {
@@ -27,37 +29,54 @@ const extractYoutubeId = (url: string) => {
   return match ? match[1] : "";
 };
 
-const getYoutubeHtml = (id: string, isVisible: boolean) => `
+const getYoutubeHtml = (id: string, isVisible: boolean, isMuted: boolean) => `
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-      html, body { margin: 0; padding: 0; height: 100%; background: black; overflow: hidden; }
-      .container { position: relative; width: 100vw; height: 100vh; }
-      iframe { pointer-events: none; } /* User touch prevent karne ke liye if needed */
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <iframe
-        width="100%"
-        height="100%"
-        src="https://www.youtube.com/embed/${id}?autoplay=${isVisible ? 1 : 0}&mute=0&controls=0&loop=1&playlist=${id}&modestbranding=1&playsinline=1&rel=0"
-        frameborder="0"
-        allow="autoplay; encrypted-media"
-      ></iframe>
-    </div>
-  </body>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    html, body { 
+      margin: 0; padding: 0; height: 100%; width: 100%; 
+      background: black; overflow: hidden; 
+      display: flex; justify-content: center; align-items: center;
+    }
+    .video-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    iframe {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      /* Scale 1.8 se 2.0 tak width ke hisaab se adjust hota hai */
+      transform: translate(-50%, -50%) scale(1.8); 
+      width: 100vw;
+      height: 100vh;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="video-container">
+    <iframe
+      src="https://www.youtube.com/embed/${id}?autoplay=${isVisible ? 1 : 0}&mute=${isMuted ? 1 : 0}&controls=0&loop=1&playlist=${id}&playsinline=1&rel=0&enablejsapi=1"
+      allow="autoplay; encrypted-media"
+    ></iframe>
+  </div>
+</body>
 </html>
 `;
 
-const YouTubeVideo = () => {
-  const [activeUrl, setActiveUrl] = useState(SHORTS[0]);
+const YouTubeReels = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isGlobalMuted, setIsGlobalMuted] = useState(true);
+  const [hasUnmutedOnce, setHasUnmutedOnce] = useState(false);
 
   const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
     if (viewableItems.length > 0) {
-      setActiveUrl(viewableItems[0].item);
+      setActiveIndex(viewableItems[0].index ?? 0);
     }
   }).current;
 
@@ -65,41 +84,65 @@ const YouTubeVideo = () => {
     itemVisiblePercentThreshold: 80,
   }).current;
 
+  const handlePress = () => {
+    setIsGlobalMuted(!isGlobalMuted);
+    if (isGlobalMuted) {
+      setHasUnmutedOnce(true); // 🔥 Hint sirf pehli baar dikhegi
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar hidden />
+
       <FlatList
         data={SHORTS}
-        // 👇 Vertical Scroll settings
-        pagingEnabled 
+        pagingEnabled
         showsVerticalScrollIndicator={false}
-        snapToInterval={SCREEN_HEIGHT}
-        snapToAlignment="start"
-        decelerationRate="fast"
-        // 👆 Reels behavior
         keyExtractor={(item) => item}
+        // Performance optimization for scrolling
+        getItemLayout={(_, index) => ({
+          length: SCREEN_HEIGHT,
+          offset: SCREEN_HEIGHT * index,
+          index,
+        })}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
-        renderItem={({ item }) => {
+        renderItem={({ item, index }) => {
           const videoId = extractYoutubeId(item);
-          const isVisible = item === activeUrl;
+          const isVisible = index === activeIndex;
 
           return (
-            <View style={styles.videoCard}>
-              <WebView
-                key={videoId}
-                source={{
-                  html: getYoutubeHtml(videoId, isVisible),
-                  baseUrl: "https://www.youtube.com",
-                }}
-                style={styles.webview}
-                javaScriptEnabled
-                domStorageEnabled
-                allowsInlineMediaPlayback
-                mediaPlaybackRequiresUserAction={false}
-                scrollEnabled={false}
-              />
-            </View>
+            <TouchableWithoutFeedback onPress={handlePress}>
+              <View style={styles.videoCard}>
+                {/* Sirf current, pichli aur agli video render hogi memory bachane ke liye */}
+                {Math.abs(index - activeIndex) <= 1 ? (
+                  <WebView
+                    key={`reel-${videoId}-${isGlobalMuted}`} 
+                    source={{
+                      html: getYoutubeHtml(videoId, isVisible, isGlobalMuted),
+                      baseUrl: "https://m.youtube.com", // 🔥 Fixes Error 153
+                    }}
+                    style={styles.webview}
+                    javaScriptEnabled
+                    domStorageEnabled
+                    allowsInlineMediaPlayback
+                    mediaPlaybackRequiresUserAction={false}
+                    scrollEnabled={false}
+                    scalesPageToFit={true}
+                  />
+                ) : (
+                  <View style={{ flex: 1, backgroundColor: 'black' }} />
+                )}
+
+                {/* Hint logic: Unmute hone par gayab ho jayegi */}
+                {isGlobalMuted && !hasUnmutedOnce && isVisible && (
+                  <View style={styles.tapHint}>
+                    <Text style={styles.tapText}>🔊 Tap for sound</Text>
+                  </View>
+                )}
+              </View>
+            </TouchableWithoutFeedback>
           );
         }}
       />
@@ -107,7 +150,7 @@ const YouTubeVideo = () => {
   );
 };
 
-export default memo(YouTubeVideo);
+export default memo(YouTubeReels);
 
 const styles = StyleSheet.create({
   container: {
@@ -115,12 +158,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
   },
   videoCard: {
-    width: width,
-    height: SCREEN_HEIGHT, // Har item poori screen lega
+    // width: width,
+    // height: SCREEN_HEIGHT,
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
     backgroundColor: "#000",
   },
   webview: {
     flex: 1,
     backgroundColor: "black",
+  },
+  tapHint: {
+    position: "absolute",
+    bottom: 100,
+    alignSelf: "center",
+    backgroundColor: "rgba(0,0,0,0.7)",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 25,
+  },
+  tapText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

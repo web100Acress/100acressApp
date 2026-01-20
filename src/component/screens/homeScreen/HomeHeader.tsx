@@ -6,9 +6,15 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-import { fetchActiveBanners, pickBestBannerUrl } from "../../../api/Services/bannerService"; 
+import {
+  fetchActiveBanners,
+  pickBestBannerUrl,
+} from "../../../api/Services/bannerService";
 
 const { width } = Dimensions.get("window");
+
+const LOGO_URL =
+  "https://100acress-media-bucket.s3.ap-south-1.amazonaws.com/100acre/logo/logowhite.webp.webp";
 
 const searchTexts = [
   "Search Sohna Road",
@@ -29,7 +35,7 @@ const HomeHeader = () => {
   const [bannerUrls, setBannerUrls] = useState<string[]>([]);
   const [bannerIndex, setBannerIndex] = useState(0);
 
-  // Typing effect for search placeholder
+  // Typing animation
   useEffect(() => {
     if (inputValue.length > 0) return;
 
@@ -38,12 +44,12 @@ const HomeHeader = () => {
 
     const timer = setTimeout(() => {
       if (!isDeleting && charIndex < currentText.length) {
-        setDisplayText(currentText.substring(0, charIndex + 1));
+        setDisplayText(currentText.slice(0, charIndex + 1));
         setCharIndex(charIndex + 1);
       } else if (!isDeleting && charIndex === currentText.length) {
         setTimeout(() => setIsDeleting(true), 1000);
       } else if (isDeleting && charIndex > 0) {
-        setDisplayText(currentText.substring(0, charIndex - 1));
+        setDisplayText(currentText.slice(0, charIndex - 1));
         setCharIndex(charIndex - 1);
       } else if (isDeleting && charIndex === 0) {
         setIsDeleting(false);
@@ -54,18 +60,19 @@ const HomeHeader = () => {
     return () => clearTimeout(timer);
   }, [charIndex, isDeleting, textIndex, inputValue]);
 
-  // Fetch banners from API
+  // Fetch banners
   useEffect(() => {
     let isMounted = true;
 
     (async () => {
       try {
         const banners = await fetchActiveBanners();
-        console.log("HomeHeader: active banners fetched:", banners?.length || 0);
-        const urls = banners.map((banner) => pickBestBannerUrl(banner)).filter(Boolean) as string[];
+        const urls = banners
+          .map((banner) => pickBestBannerUrl(banner))
+          .filter(Boolean) as string[];
+
         if (isMounted) setBannerUrls(urls);
       } catch {
-        console.log("HomeHeader: failed to fetch banners");
         if (isMounted) setBannerUrls([]);
       }
     })();
@@ -75,13 +82,13 @@ const HomeHeader = () => {
     };
   }, []);
 
-  // Auto-scroll banners
+  // Auto banner change
   useEffect(() => {
     if (bannerUrls.length === 0) return;
 
     const interval = setInterval(() => {
       setBannerIndex((prev) => (prev + 1) % bannerUrls.length);
-    }, 3000); // change banner every 3 seconds
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [bannerUrls]);
@@ -89,12 +96,18 @@ const HomeHeader = () => {
   return (
     <>
       {bannerUrls.length > 0 && (
-        <Image
-          source={{ uri: bannerUrls[bannerIndex] }}
-          style={styles.banner}
-        />
+        <View style={styles.bannerWrapper}>
+          <Image
+            source={{ uri: bannerUrls[bannerIndex] }}
+            style={styles.banner}
+          />
+
+          {/* LOGO */}
+          <Image source={{ uri: LOGO_URL }} style={styles.logo} />
+        </View>
       )}
 
+      {/* SEARCH BOX */}
       <View style={styles.searchContainer}>
         <TextInput
           value={inputValue}
@@ -112,10 +125,22 @@ const HomeHeader = () => {
 export default HomeHeader;
 
 const styles = StyleSheet.create({
-  banner: {
+  bannerWrapper: {
     width,
     height: 300,
+  },
+  banner: {
+    width: "100%",
+    height: "100%",
     resizeMode: "cover",
+  },
+  logo: {
+    position: "absolute",
+    top: 16,
+    left: 16,
+    width: 120,
+    height: 40,
+    resizeMode: "contain",
   },
   searchContainer: {
     marginHorizontal: 16,
@@ -130,6 +155,6 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     fontSize: 18,
-    color: "#00000",
+    color: "#000",
   },
 });

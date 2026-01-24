@@ -22,19 +22,19 @@ const Properties = () => {
         <ScrollView>
         <StartWith />
         <RecommendedProjects />
-        <TrendingProjects />
-        <NewLaunchSection />
-        <TopLuxury />
-        <BestBudgetProject />
-        <SeoProject /> 
-        <DreamPropertiesInGurgaon /> 
-        <Commercial />
-        <Feature /> 
-        <City /> 
-        <Affordable />
-        <RealEstate />
-        <Why100Acress /> 
-        <PopularTools />
+        {/* <TrendingProjects /> */}
+        {/* <NewLaunchSection /> */}
+        {/* <TopLuxury /> */}
+        {/* <BestBudgetProject /> */}
+        {/* <SeoProject />  */}
+        {/* <DreamPropertiesInGurgaon />  */}
+        {/* <Commercial /> */}
+        {/* <Feature />  */}
+        {/* <City />  */}
+        {/* <Affordable /> */}
+        {/* <RealEstate /> */}
+        {/* <Why100Acress />  */}
+        {/* <PopularTools /> */}
         </ScrollView>
     </View>
   )

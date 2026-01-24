@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, memo } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
+  FlatList, // ScrollView ki jagah FlatList
   ImageBackground,
   TouchableOpacity,
   Linking,
   Alert,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import {
   getScoplotProjects,
@@ -18,6 +19,45 @@ import {
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = width * 0.8;
 const CARD_HEIGHT = 260;
+
+// 1. Memoized Card Component for Smooth Scrolling
+const SeoCard = memo(({ item, onOpen }: { item: ScoplotProject; onOpen: (url: string) => void }) => (
+  <View style={styles.card}>
+    <ImageBackground
+      source={{
+        uri: item.icon || "https://via.placeholder.com/400x300?text=No+Image",
+      }}
+      style={styles.image}
+      imageStyle={{ borderRadius: 18 }}
+      resizeMethod="resize" // Android Fix
+      fadeDuration={0}      // Instant Load
+    >
+      {/* Dark Overlay */}
+      <View style={styles.overlay} />
+
+      {/* Info Box */}
+      <View style={styles.infoBox}>
+        <Text style={styles.title} numberOfLines={1}>
+          {item.label}
+        </Text>
+
+        <Text style={styles.location} numberOfLines={1}>
+          📍 {item.location}
+        </Text>
+
+        <View style={styles.buttonRow}>
+          <TouchableOpacity
+            style={styles.exploreBtn}
+            activeOpacity={0.8}
+            onPress={() => item.url && onOpen(item.url)}
+          >
+            <Text style={styles.exploreText}>Explore</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ImageBackground>
+  </View>
+));
 
 const SeoProject: React.FC = () => {
   const [projects, setProjects] = useState<ScoplotProject[]>([]);
@@ -34,96 +74,68 @@ const SeoProject: React.FC = () => {
       setProjects(data);
     } catch (error) {
       console.log("❌ API Error 👉", error);
-      Alert.alert("Error", "Unable to fetch projects");
     } finally {
       setLoading(false);
     }
   };
 
-  const openURL = (url: string) => {
-    Linking.openURL(url).catch(() =>
-      Alert.alert("Error", "Unable to open link")
-    );
-  };
+  // 2. Stable function reference
+  const handleOpenURL = useCallback((url: string) => {
+    Linking.openURL(url).catch(() => Alert.alert("Error", "Unable to open link"));
+  }, []);
+
+  // 3. Render Item function
+  const renderItem = useCallback(({ item }: { item: ScoplotProject }) => (
+    <SeoCard item={item} onOpen={handleOpenURL} />
+  ), [handleOpenURL]);
 
   return (
     <View style={styles.wrapper}>
       <Text style={styles.heading}>SCO Projects in Gurugram</Text>
 
       {loading ? (
-        <Text style={{ marginLeft: 16 }}>Loading projects...</Text>
+        <ActivityIndicator color="#e60023" style={{ marginLeft: 16 }} />
       ) : (
-        <ScrollView
+        <FlatList
+          data={projects}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 16 }}
-        >
-          {projects.length > 0 ? (
-            projects.map((item, index) => (
-              <View key={index} style={styles.card}>
-                <ImageBackground
-                  source={{
-                    uri:
-                      item.icon ||
-                      "https://via.placeholder.com/400x300?text=No+Image",
-                  }}
-                  style={styles.image}
-                  imageStyle={{ borderRadius: 18 }}
-                >
-                  {/* Dark Overlay */}
-                  <View style={styles.overlay} />
-
-                  {/* Info Box */}
-                  <View style={styles.infoBox}>
-                    <Text style={styles.title} numberOfLines={1}>
-                      {item.label}
-                    </Text>
-
-                    <Text style={styles.location} numberOfLines={2}>
-                      📍 {item.location}
-                    </Text>
-
-                    <View style={styles.buttonRow}>
-                      <TouchableOpacity
-                        style={styles.exploreBtn}
-                        onPress={() => item.url && openURL(item.url)}
-                      >
-                        <Text style={styles.exploreText}>Explore</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </ImageBackground>
-              </View>
-            ))
-          ) : (
-            <Text style={{ marginLeft: 16, marginTop: 20 }}>
-              No projects found
-            </Text>
-          )}
-        </ScrollView>
+          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 10 }}
+          // ⚡️ Android Smoothness Props
+          removeClippedSubviews={true}
+          initialNumToRender={2}
+          maxToRenderPerBatch={2}
+          windowSize={3}
+          snapToInterval={CARD_WIDTH + 16}
+          decelerationRate="fast"
+          ListEmptyComponent={<Text style={{ marginLeft: 16 }}>No projects found</Text>}
+        />
       )}
     </View>
   );
 };
 
-export default SeoProject;
+export default memo(SeoProject);
 
 const styles = StyleSheet.create({
   wrapper: {
-    paddingVertical: 20,
+    paddingVertical: 15,
   },
   heading: {
-    fontSize: 22,
-    fontWeight: "700",
+    fontSize: 20,
+    fontWeight: "800",
     marginLeft: 16,
     marginBottom: 12,
+    color: "#111",
   },
   card: {
     width: CARD_WIDTH,
     height: CARD_HEIGHT,
     marginRight: 16,
     borderRadius: 18,
-    overflow: "hidden",
+    backgroundColor: "#eee", // Placeholder color while loading
   },
   image: {
     flex: 1,
@@ -131,27 +143,24 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.25)",
+    backgroundColor: "rgba(0,0,0,0.3)", // Thoda dark for better text visibility
+    borderRadius: 18,
   },
   infoBox: {
     backgroundColor: "#fff",
     margin: 12,
     borderRadius: 14,
     padding: 12,
-  },
-  price: {
-    color: "#e60023",
-    fontWeight: "800",
-    fontSize: 13,
-    marginBottom: 4,
+    elevation: 5, // Shadow on Android
   },
   title: {
     fontSize: 16,
     fontWeight: "700",
+    color: "#111",
     marginBottom: 2,
   },
   location: {
-    fontSize: 13,
+    fontSize: 12,
     color: "#6B7280",
     marginBottom: 10,
   },
@@ -162,22 +171,13 @@ const styles = StyleSheet.create({
   exploreBtn: {
     flex: 1,
     backgroundColor: "#e60023",
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderRadius: 10,
     alignItems: "center",
-    marginRight: 8,
   },
   exploreText: {
     color: "#fff",
     fontWeight: "700",
     fontSize: 13,
-  },
-  whatsappBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
-    backgroundColor: "#e9fff1",
-    alignItems: "center",
-    justifyContent: "center",
   },
 });

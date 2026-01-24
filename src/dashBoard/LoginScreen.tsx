@@ -70,7 +70,6 @@ const handleLogin = async () => {
     // 1. Storage mein save karein
     await Promise.all([
       AsyncStorage.setItem("ACCESS_TOKEN", token),
-      console.log(`Access token is this = ${token}`),
       AsyncStorage.setItem("IS_LOGGED_IN", "true"),
       user ? AsyncStorage.setItem("USER_DATA", JSON.stringify(user)) : Promise.resolve(),
     ]);

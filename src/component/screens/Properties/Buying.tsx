@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo, memo } from "react";
 import {
   View,
   Text,
@@ -7,9 +7,29 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
+  Linking,
+  ActivityIndicator,
 } from "react-native";
-import { Linking } from "react-native";
 import { getBuyProject, BuyProject } from "../../../api/Services/Buy";
+
+// 1. Project Card ko Memoize karein taaki search ke waqt cards refresh na hon
+const ProjectCard = memo(({ item }: { item: BuyProject }) => (
+  <TouchableOpacity
+    style={styles.card}
+    activeOpacity={0.7}
+    onPress={() => item.url && Linking.openURL(item.url)}
+  >
+    <Image
+      source={{ uri: item.icon || "https://via.placeholder.com/150" }}
+      style={styles.image}
+      resizeMethod="resize" // Android image performance fix
+    />
+    <View style={styles.info}>
+      <Text numberOfLines={1} style={styles.title}>{item.label}</Text>
+      <Text numberOfLines={1} style={styles.location}>📍 {item.location}</Text>
+    </View>
+  </TouchableOpacity>
+));
 
 const Buying = () => {
   const [search, setSearch] = useState("");
@@ -22,57 +42,63 @@ const Buying = () => {
         const data = await getBuyProject();
         setProjects(data);
       } catch (err) {
-        console.log("❌ New Launch API error 👉", err);
+        console.log("❌ Buying API error 👉", err);
       } finally {
         setLoading(false);
       }
     })();
   }, []);
 
-  // 🔍 search filter
-  const filteredProjects = projects.filter((item) => {
-  const label = item.label?.toLowerCase() || "";
-  const location = item.location?.toLowerCase() || "";
-  const keyword = search.toLowerCase();
+  // 2. Search logic ko useMemo mein rakha (Performance Fix)
+  const filteredProjects = useMemo(() => {
+    const keyword = search.toLowerCase().trim();
+    if (!keyword) return projects;
 
-  if (!keyword) return true;
+    return projects.filter((item) => {
+      const label = item.label?.toLowerCase() || "";
+      const location = item.location?.toLowerCase() || "";
+      return label.includes(keyword) || location.includes(keyword);
+    });
+  }, [search, projects]);
 
-  return label.includes(keyword) || location.includes(keyword);
-});
-
-
-  const renderItem = ({ item }: { item: BuyProject }) => (
-    <TouchableOpacity
-      style={styles.card}
-      onPress={() => item.url && Linking.openURL(item.url)}
-    >
-      <Image
-        source={{ uri: item.icon || "https://via.placeholder.com/150" }}
-        style={styles.image}
-      />
-      <Text style={styles.title}>{item.label}</Text>
-      <Text style={styles.location}>{item.location}</Text>
-    </TouchableOpacity>
-  );
+  // 3. Render function ko useCallback mein rakha
+  const renderItem = useCallback(({ item }: { item: BuyProject }) => (
+    <ProjectCard item={item} />
+  ), []);
 
   return (
     <View style={styles.container}>
-      <TextInput
-        placeholder="Search Properties...."
-        value={search}
-        onChangeText={setSearch}
-        style={styles.searchInput}
-      />
+      <View style={styles.header}>
+        <TextInput
+          placeholder="Search Properties...."
+          placeholderTextColor="#999"
+          value={search}
+          onChangeText={setSearch}
+          style={styles.searchInput}
+        />
+      </View>
 
-      <FlatList
-        data={filteredProjects}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={renderItem}
-        numColumns={2}                     // ✅ no horizontal scroll
-        columnWrapperStyle={{ gap: 10 }}
-        contentContainerStyle={{ paddingTop: 12 }}
-        showsVerticalScrollIndicator={false}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color="#e60023" style={{ marginTop: 20 }} />
+      ) : (
+        <FlatList
+          data={filteredProjects}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={renderItem}
+          numColumns={2}
+          columnWrapperStyle={styles.columnWrapper}
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
+          // Android specific performance props
+          removeClippedSubviews={true}
+          initialNumToRender={6}
+          maxToRenderPerBatch={6}
+          windowSize={5}
+          ListEmptyComponent={
+            !loading && <Text style={styles.emptyText}>No properties found</Text>
+          }
+        />
+      )}
     </View>
   );
 };
@@ -80,33 +106,61 @@ const Buying = () => {
 export default Buying;
 
 const styles = StyleSheet.create({
-  searchInput: {
-    paddingHorizontal: 10,
-    paddingVertical: 15,
-    backgroundColor: "#ffffff",
-    borderRadius: 6,
-    color: "#000000",
-  },
   container: {
     flex: 1,
+    backgroundColor: "#f8efefff",
+  },
+  header: {
     padding: 16,
     backgroundColor: "#f8efefff",
   },
+  searchInput: {
+    paddingHorizontal: 15,
+    paddingVertical: 12,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    color: "#000000",
+    elevation: 3, // Android shadow
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  listContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 20,
+  },
+  columnWrapper: {
+    justifyContent: "space-between",
+  },
   card: {
-    flex: 1,
-    marginBottom: 14,
+    width: "48%", // 2 columns properly aligned
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    marginBottom: 16,
+    overflow: "hidden",
+    elevation: 3,
   },
   image: {
     width: "100%",
-    height: 150,
-    borderRadius: 5,
+    height: 120,
+  },
+  info: {
+    padding: 10,
   },
   title: {
-    fontWeight: "600",
-    marginTop: 8,
+    fontWeight: "700",
+    fontSize: 14,
+    color: "#111",
   },
   location: {
     color: "#6B7280",
     marginTop: 4,
+    fontSize: 12,
+  },
+  emptyText: {
+    textAlign: "center",
+    marginTop: 50,
+    color: "#666",
   },
 });

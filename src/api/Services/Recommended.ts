@@ -18,7 +18,6 @@ export const getRecommendedProject = async (): Promise<RecommendedProject[]> => 
       : {}, 
   });
 
-   console.log(res.data)
   return (res?.data || []).map((item: any) => ({
     icon:
       item.thumbnailImage?.cdn_url ||

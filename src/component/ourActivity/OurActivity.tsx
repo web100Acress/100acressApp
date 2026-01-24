@@ -28,7 +28,7 @@ const OurActivity = () => {
       setProjects(data);
       setFilteredProjects(data); // initial list
     } catch (error) {
-      console.log("API ERROR:", error);
+      console.error("Error fetching projects:", error);
     } finally {
       setLoading(false);
     }

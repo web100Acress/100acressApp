@@ -32,7 +32,6 @@ const BestBudgetCarousel: React.FC = () => {
       const data = await getBestBudgetProject();
       setProjects(data);
     } catch (error) {
-      console.log("❌ Budget API Error:", error);
       Alert.alert("Error", "Unable to fetch projects");
     } finally {
       setLoading(false);

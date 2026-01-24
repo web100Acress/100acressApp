@@ -21,8 +21,6 @@ export const getTrendingProject = async (): Promise<TrendingProject[]> => {
       }
     );
 
-    console.log("🔥 TRENDING RAW API 👉", res);
-
     const list =
       res?.data?.data ||   // most common
       res?.data ||         // fallback
@@ -48,7 +46,6 @@ export const getTrendingProject = async (): Promise<TrendingProject[]> => {
         : "",
     }));
   } catch (error) {
-    console.log("❌ Trending API failed", error);
     return [];
   }
 };

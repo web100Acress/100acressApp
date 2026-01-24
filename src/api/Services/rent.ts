@@ -15,12 +15,7 @@ export const getRentProject = async (): Promise<RentProject[]> => {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
 
-  console.log("RENT API RESPONSE =", res);
-
   const list = res?.rentaldata || [];
-
-  console.log("rent DATA =", list);
-  console.log("rent DATA LENGTH =", list.length);
 
   return list.map((item: any) => ({
     icon:

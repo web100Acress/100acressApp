@@ -27,7 +27,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const AppNavigator = () => {
   return (
     <Stack.Navigator
-      screenOptions={{ headerShown: false }}
     >
       <Stack.Screen
       name="BottomTabs" 

@@ -15,12 +15,7 @@ export const getBuyProject = async (): Promise<BuyProject[]> => {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
 
-  // console.log("API RESPONSE =", res);
-
   const list = res?.ResaleData || [];
-
-  // console.log("SPOTLIGHT DATA =", list);
-  // console.log("SPOTLIGHT DATA LENGTH =", list.length);
 
   return list.map((item: any) => ({
     icon:

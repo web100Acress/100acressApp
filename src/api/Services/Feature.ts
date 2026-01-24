@@ -17,9 +17,6 @@ export const getFeaturedProjects = async (): Promise<FeaturedProject[]> => {
       : {}, 
 
   });
-    // console.log("📊 Number of Feature returned:", res?.data?.length || 0);
-    // console.log("✅ Feature RAW =>", res?.data);
-    // console.log("✅ Feature RAW =>", res?.error);
 
   return (res?.data || []).map((item: any) => ({
     icon:

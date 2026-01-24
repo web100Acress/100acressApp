@@ -17,10 +17,6 @@ export const getCityProjects = async (): Promise<CityProject[]> => {
       : {}, 
 
   });
-    // console.log("📊 Number of Feature returned:", res?.data?.length || 0);
-    // console.log("✅ Feature RAW =>", res?.data);
-    // console.log("✅ Feature RAW =>", res?.error);
-
   return (res?.data || []).map((item: any) => ({
     icon:
       item.thumbnailImage?.cdn_url ||

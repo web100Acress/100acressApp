@@ -13,8 +13,8 @@ import {
 
 const { width } = Dimensions.get("window");
 
-const LOGO_URL =
-  "https://100acress-media-bucket.s3.ap-south-1.amazonaws.com/100acre/logo/logowhite.webp.webp";
+// const LOGO_URL =
+//   "https://100acress-media-bucket.s3.ap-south-1.amazonaws.com/100acre/logo/logowhite.webp.webp";
 
 const searchTexts = [
   "Search Sohna Road",
@@ -97,13 +97,16 @@ const HomeHeader = () => {
     <>
       {bannerUrls.length > 0 && (
         <View style={styles.bannerWrapper}>
-          <Image
-            source={{ uri: bannerUrls[bannerIndex] }}
-            style={styles.banner}
-          />
+          {bannerUrls.length > 0 ? (
+            <Image
+              source={{ uri: bannerUrls[bannerIndex] }}
+              style={styles.banner}
+            />
+          ) : (
+            <View style={styles.bannerPlaceholder} />
+          )}
 
-          {/* LOGO */}
-          <Image source={{ uri: LOGO_URL }} style={styles.logo} />
+          {/* <Image source={{ uri: LOGO_URL }} style={styles.logo} /> */}
         </View>
       )}
 
@@ -157,4 +160,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#000",
   },
+  bannerPlaceholder: {
+  width: "100%",
+  height: "100%",
+  backgroundColor: "#f3f4f6",
+},
 });

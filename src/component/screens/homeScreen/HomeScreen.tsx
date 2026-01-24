@@ -2,7 +2,6 @@ import React from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
 import HomeHeader from "./HomeHeader";
 import Properties from "../Properties/Properties";
-import Banner from "./Banner";
 
 const HomeScreen = () => {
   return (
@@ -10,8 +9,7 @@ const HomeScreen = () => {
       <ScrollView
       removeClippedSubviews={false}
       keyboardShouldPersistTaps="handled">
-        <Banner />
-        {/* <HomeHeader /> */}
+        <HomeHeader />
         <Properties />
       </ScrollView>
     </View>

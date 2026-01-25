@@ -185,7 +185,7 @@ const DashBoad = ({ navigation }: any) => {
             {/* CREATE ACCOUNT */}
             <TouchableOpacity
               style={styles.createAccount}
-              onPress={() => navigation.navigate("CreateNewAcc")}
+              onPress={() => navigation.replace("CreateNewAcc")}
             >
               <Text style={styles.createText}>
                 Don’t have an account?{" "}

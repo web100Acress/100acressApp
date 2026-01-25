@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Text, Linking, Alert, Pressable } from "react-native";
 
 import HomeScreen from "../component/screens/homeScreen/HomeScreen";
-import ProfileScreen from "../dashBoard/DashBoard";
+import DashBoard from "../dashBoard/DashBoard";
 import OurActivity from "../component/ourActivity/OurActivity";
 import YoutubeVideo from "../component/videos/YouTubeVideo";
 import { Image } from "react-native";
@@ -64,6 +64,11 @@ const BottomTabs = ({}) => {
       name="PostProperty"
       component={PostProperty}
       options={({ navigation }) => ({
+        headerShown: true,
+          title: "Post Property",
+          headerStyle: { backgroundColor: "#fb8e8e" },
+          headerTintColor: "#fff",
+          headerBackButtonDisplayMode: "minimal",
       tabBarButton: () => (
       <Pressable
         onPress={() => navigation.navigate("PostProperty")}
@@ -106,8 +111,8 @@ const BottomTabs = ({}) => {
       />
 
         <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
+        name="DashBoard"
+        component={DashBoard}
         options={{
           tabBarIcon: ({ color }) => (
             <Image

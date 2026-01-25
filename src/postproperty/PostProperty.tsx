@@ -8,7 +8,12 @@ import {
   ScrollView
 } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
+import { useNavigation, NavigationProp } from '@react-navigation/native'
 
+type RootStackParamList = {
+  PostProperty: undefined
+  PropertyDetails: undefined
+}
 const STATES_OF_INDIA = [
   'Andhra Pradesh',
   'Arunachal Pradesh',
@@ -49,6 +54,7 @@ const STATES_OF_INDIA = [
 ]
 
 const PostProperty = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>()
   const [lookingFor, setLookingFor] = useState('Sell')
   const [propertyKind, setPropertyKind] = useState('Residential')
   const [propertyType, setPropertyType] = useState('')
@@ -128,7 +134,8 @@ const PostProperty = () => {
       />
 
       {/* Next Button */}
-      <TouchableOpacity style={styles.nextBtn}>
+      <TouchableOpacity style={styles.nextBtn}
+        onPress={(): void => navigation.navigate('PropertyDetails')}>
         <Text style={styles.nextText}>Next</Text>
       </TouchableOpacity>
     </ScrollView>

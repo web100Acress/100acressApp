@@ -147,14 +147,14 @@ const handleLogin = async () => {
             </Text>
           </TouchableOpacity>
 
-          {/* <Text style={styles.orText}>OR</Text> */}
+          <Text style={styles.orText}>OR</Text> 
 
-          {/* Do it later */}
-          {/* <TouchableOpacity
+          Do it later
+          <TouchableOpacity
             onPress={() => navigation.replace("BottomTabs")}
           >
             <Text style={styles.skipText}>Do it later</Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

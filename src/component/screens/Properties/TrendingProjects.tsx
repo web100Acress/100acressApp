@@ -9,6 +9,7 @@ import {
   Linking,
   Alert,
   Dimensions,
+  ImageBase,
 } from "react-native";
 import { getTrendingProject } from "../../../api/Services/Trending";
 
@@ -60,11 +61,17 @@ const ProjectCard = memo(({ item, onOpen, onCall, onWA }: {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.iconButton, { backgroundColor: "#b2fcce" }]}
+          style={[styles.iconButton, { backgroundColor: "#fee8e8" }]}
           onPress={() => onWA(item.whatsapp!)}
         >
-          <Text>💬</Text>
+          <Image
+            source={require("../../../public/assets/icon/whatsapp.png")}
+            style={styles.whatsappIcon}
+            resizeMode="contain"
+          />
         </TouchableOpacity>
+
+
       </View>
     </View>
   </View>
@@ -174,6 +181,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 4,
   },
+  whatsappIcon: {
+  width: 22,
+  height: 22,
+  },
   price: {
     color: "#e60023",
     fontWeight: "bold",
@@ -208,4 +219,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 13,
   },
+
 });

@@ -25,7 +25,7 @@ export const getTrendingProject = async (): Promise<TrendingProject[]> => {
       res?.data?.data ||   // most common
       res?.data ||         // fallback
       [];
-
+     console.log("Trending Projects API Response:", res);
     return list.map((item: any) => ({
       icon:
         item?.thumbnailImage?.cdn_url ||

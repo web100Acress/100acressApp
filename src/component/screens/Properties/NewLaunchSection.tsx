@@ -79,7 +79,11 @@ const NewLaunchSection = () => {
               </TouchableOpacity>
 
               <Pressable style={styles.iconBtn}>
-                <Text style={styles.iconText}>💬</Text>
+                <Image
+                            source={require("../../../public/assets/icon/whatsapp.png")}
+                            style={styles.whatsappIcon}
+                            resizeMode="contain"
+                          />
               </Pressable>
             </View>
           </View>
@@ -172,7 +176,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 8,
   },
-
+  whatsappIcon: {                                                                                                                                              
+  width: 22,
+  height: 22,
+},
   button: {
     flex: 1,
     backgroundColor: '#d42929',

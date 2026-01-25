@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const { width } = Dimensions.get("window");
 
-const CARD_HEIGHT = 230;
+const CARD_HEIGHT = 130;
 const TWO_COL_WIDTH = (width - 48) / 2;
 const THREE_COL_WIDTH = (width - 56) / 3;
 
@@ -136,11 +136,11 @@ const DreamPropertiesInGurgaon = () => {
                     style={styles.image}
                     imageStyle={{ borderRadius: 20 }}
                   >
-                    <View style={styles.badge}>
+                    {/* <View style={styles.badge}>
                       <Text style={styles.badgeText}>
                         {project.badge}
                       </Text>
-                    </View>
+                    </View> */}
 
                     <View style={styles.overlay} />
 
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   titleBox: {
-    backgroundColor: "rgba(234,196,196,0.6)",
+    // backgroundColor: "rgba(255, 244, 244, 0.6)",
     padding: 12,
   },
   title: {

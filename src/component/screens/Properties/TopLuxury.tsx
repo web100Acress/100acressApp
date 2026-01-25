@@ -15,48 +15,58 @@ import { getLuxuryProjects, LuxuryProject } from "../../../api/Services/Luxury";
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = width * 0.75;
 
-// 1. ProjectCard ko memoize kiya taaki unnecessary re-render na ho
-const ProjectCard = memo(({ item, onPress }: { item: LuxuryProject, onPress: (url: string) => void }) => {
-  return (
-    <TouchableOpacity
-      style={styles.card}
-      activeOpacity={0.9}
-      onPress={() => item.url && onPress(item.url)}
-    >
-      {/* TOP IMAGE - Added resizeMethod for Android optimization */}
-      {item.icon ? (
-        <Image 
-          source={{ uri: item.icon }} 
-          style={styles.image} 
-          resizeMethod="scale"
-        />
-      ) : (
-        <View style={[styles.image, { backgroundColor: '#ddd' }]} />
-      )}
+/* -------------------- PROJECT CARD -------------------- */
+const ProjectCard = memo(
+  ({ item, onPress }: { item: LuxuryProject; onPress: (url: string) => void }) => {
+    return (
+      <TouchableOpacity
+        style={styles.card}
+        activeOpacity={0.9}
+        onPress={() => item.url && onPress(item.url)}
+      >
+        {/* FULL BACKGROUND IMAGE */}
+        {item.icon ? (
+          <Image
+            source={{ uri: item.icon }}
+            style={styles.image}
+            resizeMode="cover"
+          />
+        ) : (
+          <View style={[styles.image, { backgroundColor: "#ddd" }]} />
+        )}
 
-      {/* FEATURED TAG */}
-      <View style={styles.featuredTag}>
-        <Text style={styles.featuredText}>Featured</Text>
-      </View>
+        {/* DARK OVERLAY */}
+        <View style={styles.overlay} />
 
-      {/* INFO CARD */}
-      <View style={styles.infoWrapper}>
-        <View style={styles.circleWrapper}>
-          {item.icon && (
-            <Image 
-              source={{ uri: item.icon }} 
-              style={styles.circleImage} 
-            />
-          )}
+        {/* FEATURED TAG */}
+        <View style={styles.featuredTag}>
+          <Text style={styles.featuredText}>Featured</Text>
         </View>
 
-        <Text style={styles.title} numberOfLines={1}>{item.label}</Text>
-        <Text style={styles.location} numberOfLines={1}>📍 {item.location}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-});
+        {/* INFO WRAPPER (OVER IMAGE) */}
+        <View style={styles.infoWrapper}>
+          <View style={styles.circleWrapper}>
+            {item.icon && (
+              <Image
+                source={{ uri: item.icon }}
+                style={styles.circleImage}
+              />
+            )}
+          </View>
 
+          <Text style={styles.title} numberOfLines={1}>
+            {item.label}
+          </Text>
+          <Text style={styles.location} numberOfLines={1}>
+            📍 {item.location}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+);
+
+/* -------------------- MAIN COMPONENT -------------------- */
 const TopLuxuryAPI = () => {
   const [projects, setProjects] = useState<LuxuryProject[]>([]);
   const [loading, setLoading] = useState(true);
@@ -76,15 +86,16 @@ const TopLuxuryAPI = () => {
     }
   };
 
-  // 2. onPress function ko useCallback mein rakha
   const handlePress = useCallback((url: string) => {
     Linking.openURL(url).catch(() => console.log("Couldn't open URL"));
   }, []);
 
-  // 3. Render function for FlatList
-  const renderItem = useCallback(({ item }: { item: LuxuryProject }) => (
-    <ProjectCard item={item} onPress={handlePress} />
-  ), [handlePress]);
+  const renderItem = useCallback(
+    ({ item }: { item: LuxuryProject }) => (
+      <ProjectCard item={item} onPress={handlePress} />
+    ),
+    [handlePress]
+  );
 
   return (
     <View style={styles.container}>
@@ -100,8 +111,7 @@ const TopLuxuryAPI = () => {
           renderItem={renderItem}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.listPadding}
-          // Android Performance Props
-          removeClippedSubviews={true}
+          removeClippedSubviews
           initialNumToRender={2}
           maxToRenderPerBatch={2}
           windowSize={3}
@@ -134,20 +144,21 @@ const styles = StyleSheet.create({
   },
   card: {
     width: CARD_WIDTH,
-    height: 380, // Thoda kam height for better fit
+    height: 380,
     borderRadius: 24,
-    backgroundColor: "#fff", // Standard white background better rehta hai
+    backgroundColor: "#000",
     marginRight: 16,
     overflow: "hidden",
-    elevation: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    elevation: 6,
   },
   image: {
+    ...StyleSheet.absoluteFillObject,
     width: "100%",
-    height: "65%",
+    height: "100%",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.25)",
   },
   featuredTag: {
     position: "absolute",
@@ -157,6 +168,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 5,
     borderRadius: 20,
+    zIndex: 2,
   },
   featuredText: {
     color: "#fff",
@@ -165,17 +177,16 @@ const styles = StyleSheet.create({
   },
   infoWrapper: {
     position: "absolute",
-    bottom: 12,
-    left: 12,
-    right: 12,
+    bottom: 14,
+    left: 14,
+    right: 14,
     backgroundColor: "#fff",
     borderRadius: 20,
-    paddingTop: 35,
-    paddingBottom: 15,
-    paddingHorizontal: 10,
+    paddingTop: 36,
+    paddingBottom: 16,
+    paddingHorizontal: 12,
     alignItems: "center",
-    // Shadow ko container ke bajaye yahan halka rakhein
-    elevation: 3,
+    elevation: 4,
   },
   circleWrapper: {
     position: "absolute",
@@ -186,7 +197,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    elevation: 4,
+    elevation: 5,
   },
   circleImage: {
     width: 50,
@@ -198,12 +209,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#1f2c3d",
+    color: "#111827",
     textAlign: "center",
   },
   location: {
     fontSize: 12,
-    color: "#7d8da6",
+    color: "#6b7280",
     marginTop: 2,
   },
 });

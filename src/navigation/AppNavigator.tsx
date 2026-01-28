@@ -12,6 +12,7 @@ import OurActivity from '../component/ourActivity/OurActivity';
 import DashBoad from '../dashBoard/DashBoard';
 import PropðertyDetails from '../postproperty/PropertyDetails';
 import UploadImage from '../postproperty/UploadImage';
+import VerifyOTP from '../dashBoard/VerifyOTP';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -26,6 +27,7 @@ export type RootStackParamList = {
   DashBoard: undefined;
   PropertyDetails: undefined;
   UploadImage: undefined;
+  VerifyOTP: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -114,6 +116,17 @@ const AppNavigator = () => {
         options={{
           headerShown: true,
           title: "Upload Images",
+          headerStyle: { backgroundColor: "#fb8e8e" },
+          headerTintColor: "#fff",
+          headerBackButtonDisplayMode: "minimal",
+          }} />
+
+          <Stack.Screen
+        name="VerifyOTP"
+        component={VerifyOTP}
+        options={{
+          headerShown: true,
+          title: "Verify OTP",
           headerStyle: { backgroundColor: "#fb8e8e" },
           headerTintColor: "#fff",
           headerBackButtonDisplayMode: "minimal",

@@ -73,13 +73,13 @@ const BottomTabs = ({}) => {
       <Pressable
         onPress={() => navigation.navigate("PostProperty")}
         style={{
-          width: 70,
-          height: 70,
-          borderRadius: 35,
+          width: 80,
+          height: 80,
+          borderRadius: 50,
           backgroundColor: "#cf4040",
           justifyContent: "center",
           alignItems: "center",
-          marginTop: -30,
+          marginTop: -40,
           borderWidth: 5,
           borderColor: "#fff",
         }}
